@@ -1,0 +1,221 @@
+# Medical RAG Project - Git Ignore File
+
+# =============================================================================
+# Environment & Secrets
+# =============================================================================
+.env
+.env.local
+.env.*.local
+*.key
+config.json
+secrets.json
+
+# =============================================================================
+# Cache & Generated Data  
+# =============================================================================
+cache/
+*.cache
+*.tmp
+
+# FAISS Indexes
+*.bin
+*.index
+faiss_*.bin
+faiss_*.index
+
+# Embeddings & Vectors
+*.npy
+embeddings.npy
+vectors.npy
+
+# Cached JSON data
+chunk_metadata.json
+chunks.json
+metadata.json
+documents.json
+
+# Benchmark & evaluation results
+*_results.json
+*_benchmark.json
+retrieval_benchmark_results.json
+header_impact_evaluation.json
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# =============================================================================
+# Jupyter Notebook
+# =============================================================================
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+profile_default/
+ipython_config.py
+
+# Jupyter Notebook outputs (optional - uncomment if you want to exclude outputs)
+# *.ipynb
+
+# =============================================================================
+# IDEs & Editors
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# Operating System
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# Data Files (Uncomment sections as needed)
+# =============================================================================
+# Large datasets
+# data/
+# *.csv
+# *.xlsx
+# *.parquet
+
+# PDFs (keep data_pilot/pdfs but ignore large PDF collections)
+# *.pdf
+# pdfs/
+# documents/
+
+# Medical data (uncomment if working with sensitive data)
+# patient_data/
+# clinical_data/
+# phi_data/
+
+# =============================================================================
+# Logs & Debugging
+# =============================================================================
+*.log
+logs/
+debug/
+trace/
+
+# =============================================================================
+# Virtual Environments
+# =============================================================================
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# =============================================================================
+# Package Managers
+# =============================================================================
+# pip
+pip-wheel-metadata/
+
+# conda
+.conda/
+
+# poetry
+poetry.lock
+
+# =============================================================================
+# Project Specific
+# =============================================================================
+# Temporary experiment files
+experiment_*.py
+temp_*.py
+scratch_*.py
+
+# Old versions
+*_old.*
+*_backup.*
+*_v[0-9].*
+
+# Output files
+output/
+results/
+plots/
+figures/
+
+# =============================================================================
+# Add custom patterns below
+# =============================================================================
