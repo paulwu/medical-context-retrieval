@@ -18,6 +18,7 @@ class Chunk:
     doc_id: str
     doc_title: str
     raw_chunk: str
+    chunk_index: int = 0
     ctx_header: str = ""
     augmented_chunk: str = ""
     section_path: str = ""

@@ -192,10 +192,12 @@ async def _generate_header(llm: Callable[[List[Dict]], Awaitable[str]], chunk_pa
             await asyncio.sleep(backoff)
             attempt += 1
 
-    # Log the failure before returning fallback
+    # Log the failure before returning fallback with document context
     section = chunk_payload.get('section_path', 'Section')
+    doc_title = chunk_payload.get('doc_title', 'document')
     print(f"⚠️  Header generation failed after {retries} attempts for {section}: {last_error}", flush=True)
-    return f"Medical content from {section}"
+    # Include document title in fallback for better context
+    return f"{doc_title} — {section}"
 
 async def generate_headers(
     documents: Iterable[Document],
@@ -371,7 +373,12 @@ async def azure_chat_completion(messages: List[Dict], model: str | None = None):
     from .config import AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, AOAI_CHAT_MODEL
     client = AsyncAzureOpenAI(api_key=AZURE_OPENAI_API_KEY, azure_endpoint=AZURE_OPENAI_ENDPOINT, api_version="2024-08-01-preview")
     # Use higher token limit for reasoning models like gpt-5-mini that use tokens for internal reasoning
-    resp = await client.chat.completions.create(model=model or AOAI_CHAT_MODEL, messages=messages, max_completion_tokens=500)
+    # Increased from 500 to 800 to handle longer contextual headers
+    resp = await client.chat.completions.create(
+        model=model or AOAI_CHAT_MODEL,
+        messages=messages,
+        max_completion_tokens=800
+    )
     content = resp.choices[0].message.content
     return content.strip() if content else ""
 
