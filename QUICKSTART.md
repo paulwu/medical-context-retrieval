@@ -8,10 +8,10 @@
 cp .env.example .env
 
 # Edit .env with your Azure OpenAI credentials
-# - AZURE_OPENAI_ENDPOINT (your Azure OpenAI service URL)
-# - AZURE_OPENAI_API_KEY (your API key)
-# - AOAI_EMBED_MODEL (your embedding model deployment name)
-# - AOAI_CHAT_MODEL (your chat model deployment name)
+# - AZURE_OPENAI_ENDPOINT (Required: your Azure OpenAI service URL)
+# - AZURE_OPENAI_API_KEY (Required: your API key)
+# - AOAI_EMBED_MODEL (if you want to change your embedding model deployment name)
+# - AOAI_CHAT_MODEL (if you want to change your chat model deployment name)
 ```
 
 **📝 Get Azure OpenAI credentials**: See `.env.example` for detailed setup instructions.
