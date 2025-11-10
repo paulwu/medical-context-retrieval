@@ -17,7 +17,7 @@ locals {
     LifecycleCheck = "true"
     Partner        = "NA"
     ManagedBy      = "Terraform"
-    Project        = "Zava"
+    Project        = "MedicalContextRetrieval"
   })
 
   # Network configuration
@@ -25,7 +25,7 @@ locals {
   vnet_name     = "${local.resource_prefix}-vnet"
 
   # Resource group names following CAF naming conventions
-  rg_zava_demo         = local.resource_prefix
+  rg_project_main         = local.resource_prefix
 
   # Key Vault configuration
   key_vault_name = substr(replace("${local.resource_prefix}-kv", "-", ""), 0, 24)

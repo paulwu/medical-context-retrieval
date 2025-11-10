@@ -4,12 +4,12 @@
 # Resource Group Outputs
 output "zava_demo_resource_group_name" {
   description = "Name of the zava demo resource group"
-  value       = var.deploy_infrastructure ? azurerm_resource_group.zava_demo[0].name : null
+  value       = var.deploy_infrastructure ? azurerm_resource_group.project_main[0].name : null
 }
 
 output "zava_demo_resource_group_id" {
   description = "ID of the zava demo resource group"
-  value       = var.deploy_infrastructure ? azurerm_resource_group.zava_demo[0].id : null
+  value       = var.deploy_infrastructure ? azurerm_resource_group.project_main[0].id : null
 }
 
 # Log Analytics Workspace Outputs

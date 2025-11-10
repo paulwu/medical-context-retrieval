@@ -1,12 +1,12 @@
-# Zava Voice Demo Terraform Configuration
-# Following Azure Cloud Adoption Framework (CAF) best practices
+# Medical Context Retrieval Demo Infrastructure
+# This deploys the AI models required by the dmeo
 
 # Data sources for current client configuration
 data "azurerm_client_config" "current" {}
 data "azuread_client_config" "current" {}
 
 # - Log Analytics Workspace --------------------------------------------------------------------------------
-#   In our demo Tenant, we have to use an existing LAW in a different subscription. To enable that:
+#   In EXP, we have to use an existing LAW in a different subscription. To enable that:
 #    Set variable use_existing_log_analytics to true
 #    Set variable log_analytics_subscription_id to the ID of the subscription containing the existing LAW
 # ----------------------------------------------------------------------------------------------------------
@@ -51,21 +51,21 @@ data "azapi_resource_action" "log_analytics_keys_diff_sub" {
 #   count               = var.deploy_infrastructure ? 1 : 0
 #   name                = local.log_analytics_name
 #   location            = local.main_location
-#   resource_group_name = azurerm_resource_group.zava_demo[0].name
+#   resource_group_name = azurerm_resource_group.project_main[0].name
 #   sku                 = var.log_analytics_sku
 #   retention_in_days   = var.log_analytics_retention_days
 #   tags                = local.common_tags
 
-#   depends_on = [azurerm_resource_group.zava_demo]
+#   depends_on = [azurerm_resource_group.project_main]
 # }
 
 
 # ----------------------------------------------------------------------------------------------------------
-# 1) Resource Group for Zava Voice Demo
+# 1) Resource Group for project
 # ----------------------------------------------------------------------------------------------------------
-resource "azurerm_resource_group" "zava_demo" {
+resource "azurerm_resource_group" "project_main" {
   count    = var.deploy_infrastructure ? 1 : 0
-  name     = local.rg_zava_demo
+  name     = local.rg_project_main
   location = local.main_location
   tags = merge(local.common_tags, {
     RGMonthlyCost = "500"
@@ -79,7 +79,7 @@ resource "azurerm_application_insights" "main" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = local.application_insights_name
   location            = local.main_location
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.project_main[0].name
   application_type    = "web"
   workspace_id = var.use_existing_log_analytics ? (
     var.log_analytics_subscription_id != "" ?
@@ -90,7 +90,7 @@ resource "azurerm_application_insights" "main" {
     RGMonthlyCost = "10"
   })
 
-  depends_on = [azurerm_resource_group.zava_demo]
+  depends_on = [azurerm_resource_group.project_main]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -146,12 +146,12 @@ locals {
       subresource_names              = ["account"]
       private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
     }
-    aifoundry2 = {
-      name                           = "pe-${local.aifoundry_account2_name}"
-      private_connection_resource_id = module.aifoundry_2[0].ai_foundry_account_id
-      subresource_names              = ["account"]
-      private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
-    }
+    # aifoundry2 = {
+    #   name                           = "pe-${local.aifoundry_account2_name}"
+    #   private_connection_resource_id = module.aifoundry_2[0].ai_foundry_account_id
+    #   subresource_names              = ["account"]
+    #   private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
+    # }
   } : {}
 
   # Merge all private endpoints - only non-empty when private networking is deployed
@@ -163,9 +163,9 @@ locals {
 
 module "private_network" {
   count  = var.deploy_infrastructure && var.deploy_private_network ? 1 : 0
-  source = "../Modules/private_network"
+  source = "./modules/private_network"
 
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.project_main[0].name
   location            = local.main_location
   vnet_name           = local.vnet_name
   vnet_address_space  = ["10.240.0.0/16"]
@@ -196,7 +196,7 @@ module "private_network" {
   tags = local.common_tags
 
   depends_on = [
-    azurerm_resource_group.zava_demo,
+    azurerm_resource_group.project_main,
     azurerm_storage_account.main,
     azurerm_cosmosdb_account.main,
     module.key_vault
@@ -209,7 +209,7 @@ module "private_network" {
 resource "azurerm_storage_account" "main" {
   count                         = var.deploy_infrastructure ? 1 : 0
   name                          = local.storage_account_name
-  resource_group_name           = azurerm_resource_group.zava_demo[0].name
+  resource_group_name           = azurerm_resource_group.project_main[0].name
   location                      = local.main_location
   account_tier                  = var.storage_account_tier
   account_replication_type      = var.storage_account_replication_type
@@ -222,7 +222,7 @@ resource "azurerm_storage_account" "main" {
   identity {
     type = "SystemAssigned"
   }
-  depends_on = [azurerm_resource_group.zava_demo]
+  depends_on = [azurerm_resource_group.project_main]
 }
 # ----------------------------------------------------------------------------------------------------------
 # 5) Container Registry for AI Hub
@@ -230,7 +230,7 @@ resource "azurerm_storage_account" "main" {
 resource "azurerm_container_registry" "main" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = local.container_registry_name
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.project_main[0].name
   location            = local.main_location
   sku                 = var.deploy_private_network ? "Premium" : var.container_registry_sku
   admin_enabled       = var.container_registry_admin_enabled
@@ -241,7 +241,7 @@ resource "azurerm_container_registry" "main" {
   identity {
     type = "SystemAssigned"
   }
-  depends_on = [azurerm_resource_group.zava_demo]
+  depends_on = [azurerm_resource_group.project_main]
 }
 
 
@@ -252,7 +252,7 @@ resource "azurerm_cosmosdb_account" "main" {
   count                         = var.deploy_infrastructure ? 1 : 0
   name                          = local.cosmos_db_name
   location                      = local.main_location
-  resource_group_name           = azurerm_resource_group.zava_demo[0].name
+  resource_group_name           = azurerm_resource_group.project_main[0].name
   offer_type                    = "Standard"
   kind                          = "GlobalDocumentDB"
   public_network_access_enabled = var.deploy_private_network ? false : true
@@ -271,7 +271,7 @@ resource "azurerm_cosmosdb_account" "main" {
     failover_priority = 0
   }
 
-  depends_on = [azurerm_resource_group.zava_demo]
+  depends_on = [azurerm_resource_group.project_main]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -280,7 +280,7 @@ resource "azurerm_cosmosdb_account" "main" {
 resource "azurerm_cosmosdb_sql_database" "sustineo2" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = var.cosmos_db_database_id
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.project_main[0].name
   account_name        = azurerm_cosmosdb_account.main[0].name
 
   depends_on = [azurerm_cosmosdb_account.main]
@@ -296,7 +296,7 @@ resource "azurerm_cosmosdb_sql_container" "containers" {
   } : {}
 
   name                = each.value.name
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.project_main[0].name
   account_name        = azurerm_cosmosdb_account.main[0].name
   database_name       = each.value.database_name != null ? each.value.database_name : azurerm_cosmosdb_sql_database.sustineo2[0].name
   partition_key_paths = [each.value.partition_key]
@@ -310,11 +310,11 @@ resource "azurerm_cosmosdb_sql_container" "containers" {
 # ----------------------------------------------------------------------------------------------------------
 module "container_app_environment" {
   count  = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
-  source = "../Modules/container_app_environment"
+  source = "./modules/container_app_environment"
 
   container_app_environment_name     = local.container_app_environment_name
   location                           = local.main_location
-  resource_group_name                = azurerm_resource_group.zava_demo[0].name
+  resource_group_name                = azurerm_resource_group.project_main[0].name
   infrastructure_subnet_id           = var.deploy_private_network ? module.private_network[0].subnet_ids["container_apps_infra"] : null
   internal_load_balancer_enabled     = var.deploy_private_network ? true : false
   enable_dedicated_workload_profiles = var.deploy_private_network ? true : false
@@ -378,7 +378,7 @@ module "container_app_environment" {
   ] : []
 
   depends_on = [
-    azurerm_resource_group.zava_demo,
+    azurerm_resource_group.project_main,
     data.azurerm_log_analytics_workspace.existing_same_sub,
     data.azurerm_log_analytics_workspace.existing_diff_sub,
     azurerm_cosmosdb_account.main,
@@ -403,11 +403,11 @@ module "container_app_environment" {
 # ----------------------------------------------------------------------------------------------------------
 module "key_vault" {
   count  = var.deploy_infrastructure ? 1 : 0
-  source = "../Modules/key_vault"
+  source = "./modules/key_vault"
 
   key_vault_name                  = local.key_vault_name
   location                        = local.main_location
-  resource_group_name             = azurerm_resource_group.zava_demo[0].name
+  resource_group_name             = azurerm_resource_group.project_main[0].name
   tenant_id                       = data.azurerm_client_config.current.tenant_id
   current_user_object_id          = data.azurerm_client_config.current.object_id
   key_vault_sku                   = var.key_vault_sku
@@ -429,7 +429,7 @@ module "key_vault" {
 
 
   depends_on = [
-    azurerm_resource_group.zava_demo
+    azurerm_resource_group.project_main
   ]
 }
 
@@ -438,8 +438,8 @@ module "key_vault" {
 # ----------------------------------------------------------------------------------------------------------
 module "aifoundry_1" {
   count                         = var.deploy_infrastructure && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? 1 : 0
-  source                        = "../Modules/ai_foundry"
-  resource_group_name           = azurerm_resource_group.zava_demo[0].name
+  source                        = "./modules/ai_foundry"
+  resource_group_name           = azurerm_resource_group.project_main[0].name
   location                      = var.aif_location1
   cognitive_name                = local.aifoundry_account1_name
   assign_current_user_admin     = true
@@ -464,24 +464,37 @@ module "aifoundry_1" {
         name     = "GlobalStandard"
         capacity = 250
       }
+    },
+    {
+      name = "gpt-5-mini"
+      model = {
+        format          = "OpenAI"
+        name            = "gpt-5-mini"
+        version         = "2025-08-07"
+        rai_policy_name = "Microsoft.Default"
+      }
+      sku = {
+        name     = "GlobalStandard"
+        capacity = 150
+      }
+    }    ,
+    {
+      name = "text-embedding-3-large"
+      model = {
+        format          = "OpenAI"
+        name            = "gtext-embedding-3-large"
+        version         = "2025-08-07"
+        rai_policy_name = "Microsoft.Default"
+      }
+      sku = {
+        name     = "GlobalStandard"
+        capacity = 900
+      }
     }
-    # {
-    #   name = "gpt-image-1"
-    #   model = {
-    #     format          = "OpenAI"
-    #     name            = "gpt-image-1"
-    #     version         = "2025-04-15"
-    #     rai_policy_name = "Microsoft.Default"
-    #   }
-    #   sku = {
-    #     name     = "GlobalStandard"
-    #     capacity = 3
-    #   }
-    # }
   ] : []
 
   depends_on = [
-    azurerm_resource_group.zava_demo
+    azurerm_resource_group.project_main
   ]
 }
 
@@ -494,84 +507,84 @@ moved {
 # ----------------------------------------------------------------------------------------------------------
 # 11) AI Foundry 2 - Secondary Foundry
 # ----------------------------------------------------------------------------------------------------------
-module "aifoundry_2" {
-  count                         = var.deploy_infrastructure && !var.destroy_ai_foundry_instances ? 1 : 0
-  source                        = "../Modules/ai_foundry"
-  resource_group_name           = azurerm_resource_group.zava_demo[0].name
-  location                      = var.aif_location2
-  cognitive_name                = local.aifoundry_account2_name
-  assign_current_user_admin     = true
-  current_user_object_id        = data.azurerm_client_config.current.object_id
-  public_network_access_enabled = var.deploy_private_network ? false : true
-  create_deployments            = true
-  #create_deployments            = var.deploy_ai_model_deployments
-  create_ai_foundry_project = true
-  tags = merge(local.common_tags, {
-    RGMonthlyCost = "50"
-  })
+# module "aifoundry_2" {
+#   count                         = var.deploy_infrastructure && !var.destroy_ai_foundry_instances ? 1 : 0
+#   source                        = "./modules/ai_foundry"
+#   resource_group_name           = azurerm_resource_group.project_main[0].name
+#   location                      = var.aif_location2
+#   cognitive_name                = local.aifoundry_account2_name
+#   assign_current_user_admin     = true
+#   current_user_object_id        = data.azurerm_client_config.current.object_id
+#   public_network_access_enabled = var.deploy_private_network ? false : true
+#   create_deployments            = true
+#   #create_deployments            = var.deploy_ai_model_deployments
+#   create_ai_foundry_project = true
+#   tags = merge(local.common_tags, {
+#     RGMonthlyCost = "50"
+#   })
 
-  deployments = var.deploy_ai_model_deployments ? [
-    # {
-    #   name = "gpt-4o-mini-realtime-preview"
-    #   model = {
-    #     format          = "OpenAI"
-    #     name            = "gpt-4o-mini-realtime-preview"
-    #     version         = "2024-12-17"
-    #     rai_policy_name = "Microsoft.Default"
-    #   }
-    #   sku = {
-    #     name     = "GlobalStandard"
-    #     capacity = 6
-    #   }
-    # },
-    {
-      name = "gpt-image-1"
-      model = {
-        format          = "OpenAI"
-        name            = "gpt-image-1"
-        version         = "2025-04-15"
-        rai_policy_name = "Microsoft.Default"
-      }
-      sku = {
-        name     = "GlobalStandard"
-        capacity = 3
-      }
-    },
-    {
-      name = "sora"
-      model = {
-        format          = "OpenAI"
-        name            = "sora"
-        version         = "2025-05-02"
-        rai_policy_name = "Microsoft.Default"
-      }
-      sku = {
-        name     = "GlobalStandard"
-        capacity = 60
-      }
-    }
-  ] : []
+#   deployments = var.deploy_ai_model_deployments ? [
+#     # {
+#     #   name = "gpt-4o-mini-realtime-preview"
+#     #   model = {
+#     #     format          = "OpenAI"
+#     #     name            = "gpt-4o-mini-realtime-preview"
+#     #     version         = "2024-12-17"
+#     #     rai_policy_name = "Microsoft.Default"
+#     #   }
+#     #   sku = {
+#     #     name     = "GlobalStandard"
+#     #     capacity = 6
+#     #   }
+#     # },
+#     # {
+#     #   name = "gpt-image-1"
+#     #   model = {
+#     #     format          = "OpenAI"
+#     #     name            = "gpt-image-1"
+#     #     version         = "2025-04-15"
+#     #     rai_policy_name = "Microsoft.Default"
+#     #   }
+#     #   sku = {
+#     #     name     = "GlobalStandard"
+#     #     capacity = 3
+#     #   }
+#     # },
+#     # {
+#     #   name = "sora"
+#     #   model = {
+#     #     format          = "OpenAI"
+#     #     name            = "sora"
+#     #     version         = "2025-05-02"
+#     #     rai_policy_name = "Microsoft.Default"
+#     #   }
+#     #   sku = {
+#     #     name     = "GlobalStandard"
+#     #     capacity = 60
+#     #   }
+#     # }
+#   ] : []
 
-  depends_on = [
-    azurerm_resource_group.zava_demo
-  ]
-}
+#   depends_on = [
+#     azurerm_resource_group.project_main
+#   ]
+# }
 
-moved {
-  from = module.aifoundry_2
-  to   = module.aifoundry_2[0]
-}
+# moved {
+#   from = module.aifoundry_2
+#   to   = module.aifoundry_2[0]
+# }
 
 # ----------------------------------------------------------------------------------------------------------
 # 13) Azure Front Door
 #     Azure Front Door for Container App protection. If Container App Environment is deployed, create Front Door to protect it.
 # ----------------------------------------------------------------------------------------------------------
 module "azure_frontdoor" {
-  source = "../Modules/azure_frontdoor"
+  source = "./modules/azure_frontdoor"
   count  = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
 
   profile_name        = "${local.resource_prefix}-frontdoor"
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.project_main[0].name
   sku_name            = "Standard_AzureFrontDoor"
   endpoint_name       = "${local.resource_prefix}-fd-endpoint"
   origin_host_name    = var.deploy_container_app_helloworld ? module.container_app_environment[0].container_app_fqdn : "yourapp.azurecontainerapps.io"
@@ -581,7 +594,7 @@ module "azure_frontdoor" {
   tags = merge(local.common_tags, {
     RGMonthlyCost = var.deploy_private_network ? "400" : "125"
   })
-  depends_on = [module.container_app_environment, azurerm_resource_group.zava_demo]
+  depends_on = [module.container_app_environment, azurerm_resource_group.project_main]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -644,7 +657,7 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
 #   source = "../Modules/cognitive_services"
 
 #   cognitive_name                = local.cognitive_services_name
-#   resource_group_name           = azurerm_resource_group.zava_demo[0].name
+#   resource_group_name           = azurerm_resource_group.project_main[0].name
 #   location                      = local.main_location
 #   sku_name                      = "S0"
 #   public_network_access_enabled = var.deploy_private_network ? false : true
@@ -659,7 +672,7 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
 #   tags = local.common_tags
 
 #   depends_on = [
-#     azurerm_resource_group.zava_demo
+#     azurerm_resource_group.project_main
 #   ]
 # }
 
@@ -668,7 +681,7 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
 # resource "azurerm_cdn_frontdoor_profile" "main" {
 #   count               = var.deploy_infrastructure ? 1 : 0
 #   name                = "${local.resource_prefix}-afd"
-#   resource_group_name = azurerm_resource_group.zava_demo[0].name
+#   resource_group_name = azurerm_resource_group.project_main[0].name
 #   sku_name            = "Standard_AzureFrontDoor"
 #   tags                = local.common_tags
 # }
