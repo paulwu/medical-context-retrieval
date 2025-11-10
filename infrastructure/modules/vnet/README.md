@@ -33,7 +33,7 @@ module "network" {
   source              = "./Modules/vnet"
   vnet_name           = "zava-vnet"
   location            = local.location
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.medical_ctx_rag[0].name
   address_space       = ["10.50.0.0/16"]
   subnets = {
     app = {

@@ -1,0 +1,7 @@
+"Region","Name","RAIPolicy","MaxCapacity","LifecycleStatus","SKU"
+"westus3","text-embedding-3-large","N/A","3","GenerallyAvailable","Standard"
+"westus3","gpt-5-mini","N/A","3","GenerallyAvailable","DataZoneProvisionedManaged"
+"eastus2","text-embedding-3-large","N/A","3","GenerallyAvailable","Standard"
+"eastus2","gpt-5-mini","N/A","3","GenerallyAvailable","GlobalStandard"
+"swedencentral","text-embedding-3-large","N/A","3","GenerallyAvailable","Standard"
+"swedencentral","gpt-5-mini","N/A","3","GenerallyAvailable","GlobalStandard"

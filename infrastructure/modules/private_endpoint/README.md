@@ -34,7 +34,7 @@ module "pe_kv" {
   source                        = "./Modules/private_endpoint"
   name                          = "pe-keyvault"
   location                      = local.location
-  resource_group_name           = azurerm_resource_group.zava_demo[0].name
+  resource_group_name           = azurerm_resource_group.medical_ctx_rag[0].name
   subnet_id                     = module.network.subnet_ids["pe"]
   private_connection_resource_id = azurerm_key_vault.main[0].id
   subresource_names             = ["vault"]

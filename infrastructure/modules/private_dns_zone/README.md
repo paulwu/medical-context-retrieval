@@ -29,7 +29,7 @@ Creates an Azure Private DNS Zone and links it to one or more virtual networks.
 module "kv_private_dns" {
   source              = "./Modules/private_dns_zone"
   zone_name           = "privatelink.vaultcore.azure.net"
-  resource_group_name = azurerm_resource_group.zava_demo[0].name
+  resource_group_name = azurerm_resource_group.medical_ctx_rag[0].name
   virtual_network_ids = { primary = module.network.vnet_id }
 }
 ```

@@ -52,8 +52,8 @@ data "azapi_resource_action" "log_analytics_keys_diff_sub" {
 #   name                = local.log_analytics_name
 #   location            = local.main_location
 #   resource_group_name = azurerm_resource_group.project_main[0].name
-#   sku                 = var.log_analytics_sku
-#   retention_in_days   = var.log_analytics_retention_days
+#   sku                 = "PerGB2018"
+#   retention_in_days   = 90
 #   tags                = local.common_tags
 
 #   depends_on = [azurerm_resource_group.project_main]
@@ -146,9 +146,9 @@ locals {
       subresource_names              = ["account"]
       private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
     }
-    # aifoundry2 = {
-    #   name                           = "pe-${local.aifoundry_account2_name}"
-    #   private_connection_resource_id = module.aifoundry_2[0].ai_foundry_account_id
+  # aifoundry2 = {
+  #   name                           = "pe-<secondary-aifoundry-name>"
+  #   private_connection_resource_id = module.aifoundry_2[0].ai_foundry_account_id
     #   subresource_names              = ["account"]
     #   private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
     # }
@@ -275,9 +275,9 @@ resource "azurerm_cosmosdb_account" "main" {
 }
 
 # ----------------------------------------------------------------------------------------------------------
-#    Cosmos DB SQL Database - sustineo2
+#    Cosmos DB SQL Database - medical-ctx-rag
 # ----------------------------------------------------------------------------------------------------------
-resource "azurerm_cosmosdb_sql_database" "sustineo2" {
+resource "azurerm_cosmosdb_sql_database" "default" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = var.cosmos_db_database_id
   resource_group_name = azurerm_resource_group.project_main[0].name
@@ -298,11 +298,11 @@ resource "azurerm_cosmosdb_sql_container" "containers" {
   name                = each.value.name
   resource_group_name = azurerm_resource_group.project_main[0].name
   account_name        = azurerm_cosmosdb_account.main[0].name
-  database_name       = each.value.database_name != null ? each.value.database_name : azurerm_cosmosdb_sql_database.sustineo2[0].name
+  database_name       = each.value.database_name != null ? each.value.database_name : azurerm_cosmosdb_sql_database.default[0].name
   partition_key_paths = [each.value.partition_key]
   throughput          = each.value.throughput
 
-  depends_on = [azurerm_cosmosdb_sql_database.sustineo2]
+  depends_on = [azurerm_cosmosdb_sql_database.default]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -453,19 +453,6 @@ module "aifoundry_1" {
 
   deployments = var.deploy_ai_model_deployments ? [
     {
-      name = "gpt-4o-mini"
-      model = {
-        format          = "OpenAI"
-        name            = "gpt-4o-mini"
-        version         = "2024-07-18"
-        rai_policy_name = "Microsoft.Default"
-      }
-      sku = {
-        name     = "GlobalStandard"
-        capacity = 250
-      }
-    },
-    {
       name = "gpt-5-mini"
       model = {
         format          = "OpenAI"
@@ -477,18 +464,18 @@ module "aifoundry_1" {
         name     = "GlobalStandard"
         capacity = 150
       }
-    }    ,
+    },
     {
       name = "text-embedding-3-large"
       model = {
         format          = "OpenAI"
-        name            = "gtext-embedding-3-large"
-        version         = "2025-08-07"
+        name            = "text-embedding-3-large"
+        version         = "2024-12-01-preview"
         rai_policy_name = "Microsoft.Default"
       }
       sku = {
         name     = "GlobalStandard"
-        capacity = 900
+        capacity = 150
       }
     }
   ] : []
@@ -511,8 +498,8 @@ moved {
 #   count                         = var.deploy_infrastructure && !var.destroy_ai_foundry_instances ? 1 : 0
 #   source                        = "./modules/ai_foundry"
 #   resource_group_name           = azurerm_resource_group.project_main[0].name
-#   location                      = var.aif_location2
-#   cognitive_name                = local.aifoundry_account2_name
+#   location                      = "<secondary-region>"
+#   cognitive_name                = "<secondary-aifoundry-name>"
 #   assign_current_user_admin     = true
 #   current_user_object_id        = data.azurerm_client_config.current.object_id
 #   public_network_access_enabled = var.deploy_private_network ? false : true

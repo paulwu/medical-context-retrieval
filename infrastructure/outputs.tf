@@ -2,13 +2,13 @@
 # Following Azure Cloud Adoption Framework (CAF) best practices
 
 # Resource Group Outputs
-output "zava_demo_resource_group_name" {
-  description = "Name of the zava demo resource group"
+output "medical_ctx_rag_resource_group_name" {
+  description = "Name of the medical_ctx_rag resource group"
   value       = var.deploy_infrastructure ? azurerm_resource_group.project_main[0].name : null
 }
 
-output "zava_demo_resource_group_id" {
-  description = "ID of the zava demo resource group"
+output "medical_ctx_rag_resource_group_id" {
+  description = "ID of the medical_ctx_rag resource group"
   value       = var.deploy_infrastructure ? azurerm_resource_group.project_main[0].id : null
 }
 
@@ -107,43 +107,6 @@ output "ai_foundry_endpoint" {
   value       = var.deploy_infrastructure && var.deploy_ai_foundry_instances ? module.aifoundry_1[0].ai_foundry_account_endpoint : null
 }
 
-# AI Model Deployment Outputs
-# output "gpt4o_mini_realtime_deployment_id" { # UNUSED
-#   description = "ID of the GPT-4o-mini-realtime-preview model deployment" # UNUSED
-#   value       = var.deploy_infrastructure && var.deploy_gpt4o_mini_realtime ? azurerm_cognitive_deployment.gpt4o_mini_realtime[0].id : null # UNUSED
-# }
-
-# output "gpt_image_deployment_id" {
-#   description = "ID of the GPT-Image-1 model deployment"
-#   value       = var.deploy_infrastructure && var.deploy_gpt_image_model ? azurerm_cognitive_deployment.gpt-image-1[0].id : null
-# }
-
-# output "sora_deployment_id" {
-#   description = "ID of the Sora model deployment"
-#   value       = var.deploy_infrastructure && var.deploy_sora_model ? azurerm_cognitive_deployment.sora[0].id : null
-# }
-
-# AI Hub and Project Outputs
-# output "ai_hub_id" {
-#   description = "ID of the Azure AI Hub"
-#   value       = var.deploy_infrastructure ? azurerm_machine_learning_workspace.ai_hub[0].id : null
-# }
-
-# output "ai_hub_name" {
-#   description = "Name of the Azure AI Hub"
-#   value       = var.deploy_infrastructure ? azurerm_machine_learning_workspace.ai_hub[0].name : null
-# }
-
-# output "ai_project_id" {
-#   description = "ID of the Azure AI Project"
-#   value       = var.deploy_infrastructure ? azurerm_machine_learning_workspace.ai_project[0].id : null
-# }
-
-# output "ai_project_name" {
-#   description = "Name of the Azure AI Project"
-#   value       = var.deploy_infrastructure ? azurerm_machine_learning_workspace.ai_project[0].name : null
-# }
-
 # Supporting Services Outputs
 output "application_insights_id" {
   description = "ID of the Application Insights"
@@ -217,9 +180,7 @@ output "deployment_summary" {
 output "ai_models_summary" {
   description = "Summary of deployed AI models"
   value = {
-    gpt4o_mini_realtime_deployed = var.deploy_infrastructure && var.deploy_gpt4o_mini_realtime
-    dalle3_deployed              = var.deploy_infrastructure && var.deploy_gpt_image_model
-    sora_deployed                = var.deploy_infrastructure && var.deploy_sora_model
+    ai_model_deployments_enabled = var.deploy_infrastructure && var.deploy_ai_model_deployments
     ai_foundry_endpoint          = var.deploy_infrastructure && var.deploy_ai_foundry_instances ? module.aifoundry_1[0].ai_foundry_account_endpoint : null
     ai_foundry_project_name      = "aifoundry-project-dev"
     ai_foundry_hub_name          = "aifoundry-hub-dev"

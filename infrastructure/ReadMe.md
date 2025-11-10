@@ -2,10 +2,15 @@
 
 This directory contains Terraform configuration for deploying the medical context retrieval demo environment in Azure. The templates follow Azure Cloud Adoption Framework conventions and support staged rollouts of key components such as private networking, Azure Container Apps, Cosmos DB, and Azure AI Foundry.
 
+
 ## Prerequisites
 - Terraform CLI 1.0 or later
 - Azure CLI 2.59 or later with access to the target subscription
-- Sufficient Azure RBAC permissions (Owner or Contributor plus User Access Administrator) on the destination subscription and resource group scope
+- Azure RBAC permissions on the target subscription/resource group:
+   - `Contributor` to create and update Azure resources
+   - `User Access Administrator` to assign role bindings for Key Vault, Container Registry, and other services 
+   - `Role Based Access Control Administrator` for the ONEMTCWW-OMS resource group to assign role bindings for Log Analytics Workspace
+   - `Azure AI Administrator` (or higher) to create AI Foundry accounts and projects
 - Optional: Service principal credentials if you prefer non-interactive authentication
 
 ## Authenticate to Azure
@@ -43,7 +48,7 @@ export ARM_TENANT_ID ARM_SUBSCRIPTION_ID
    - `organization_prefix` and `environment` drive resource naming and must remain short.
    - `use_existing_log_analytics` toggles between a new or existing Log Analytics workspace.
    - `deploy_*` flags let you stage features (e.g., skip private networking or AI Foundry on first pass).
-   - `aif_location1` and `aif_location2` must be valid Azure regions for Azure AI Foundry.
+   - `aif_location1` must be a valid Azure region for Azure AI Foundry.
 3. Keep the Terraform workspace (see next section) aligned with the `environment` variable.
 
 ## Initialize Terraform
@@ -74,6 +79,9 @@ To use a custom variable file, append `-var-file=<path>`.
 Provision or update the Azure resources.
 ```bash
 terraform apply
+
+terraform apply -auto-approve
+
 ```
 Use `-auto-approve` in automation scenarios only.
 

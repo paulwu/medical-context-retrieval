@@ -81,39 +81,12 @@ variable "destroy_ai_foundry_instances" {
 }
 
 # Sora Model Configuration
-variable "deploy_sora_model" {
-  description = "Whether to deploy Sora video generation model (requires preview access)"
-  type        = bool
-  default     = false
-}
-
-# DALL-E-3 Model Configuration
-variable "deploy_gpt_image_model" {
-  description = "Whether to deploy DALL-E-3 image generation model"
-  type        = bool
-  default     = true
-}
-
-# GPT-4o-mini-realtime-preview Model Configuration
-variable "deploy_gpt4o_mini_realtime" {
-  description = "Whether to deploy GPT-4o-mini-realtime-preview model"
-  type        = bool
-  default     = true
-}
-
-# GPT-4 Model deployment removed - using AI Foundry modules instead
-
-# ---------------------------------------------------------------------------------------------------
-# AI Foundry Variables
-# ---------------------------------------------------------------------------------------------------
 variable "aif_location1" {
   type        = string
   description = "Azure region"
 }
-variable "aif_location2" {
-  type        = string
-  description = "Azure region"
-}
+
+# GPT-4 Model deployment removed - using AI Foundry modules instead
 
 # ---------------------------------------------------------------------------------------------------
 # Container App Configuration
@@ -210,17 +183,6 @@ variable "cosmos_db_consistency_level" {
   }
 }
 
-variable "cosmos_db_throughput" {
-  description = "Throughput for Cosmos DB database (RU/s)"
-  type        = number
-  default     = 400
-
-  validation {
-    condition     = var.cosmos_db_throughput >= 400 && var.cosmos_db_throughput <= 1000000
-    error_message = "Cosmos DB throughput must be between 400 and 1,000,000 RU/s."
-  }
-}
-
 variable "cosmos_db_database_id" {
   description = "Database ID for the Cosmos DB"
   type        = string
@@ -311,28 +273,6 @@ variable "log_analytics_subscription_id" {
   description = "Subscription ID where the Log Analytics workspace is located (leave empty if same subscription)"
   type        = string
   default     = ""
-}
-
-variable "log_analytics_sku" {
-  description = "SKU for Log Analytics Workspace"
-  type        = string
-  default     = "PerGB2018"
-
-  validation {
-    condition     = contains(["Free", "Standard", "Premium", "PerNode", "PerGB2018", "Standalone"], var.log_analytics_sku)
-    error_message = "Invalid Log Analytics SKU specified."
-  }
-}
-
-variable "log_analytics_retention_days" {
-  description = "Number of days to retain logs in Log Analytics"
-  type        = number
-  default     = 90
-
-  validation {
-    condition     = var.log_analytics_retention_days >= 30 && var.log_analytics_retention_days <= 730
-    error_message = "Log Analytics retention must be between 30 and 730 days."
-  }
 }
 
 # ---------------------------------------------------------------------------------------------------
