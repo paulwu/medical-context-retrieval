@@ -470,7 +470,7 @@ module "aifoundry_1" {
       model = {
         format          = "OpenAI"
         name            = "text-embedding-3-large"
-        version         = "2024-12-01-preview"
+        version         = "1"
         rai_policy_name = "Microsoft.Default"
       }
       sku = {
