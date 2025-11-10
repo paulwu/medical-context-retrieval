@@ -1,6 +1,7 @@
-# Medical RAG System - Azure Deployment Guide
+# Medical RAG System - Azure Deployment Guide (Archive)
 
-This guide explains how to deploy the Medical RAG system to Azure for global access.
+> **Note**
+> This document describes a legacy Bicep-based deployment flow that is no longer maintained. The active Terraform implementation lives in `infrastructure/main.tf`. Use this guide for historical reference only.
 
 ## Architecture Overview
 

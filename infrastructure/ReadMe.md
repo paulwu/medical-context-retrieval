@@ -30,12 +30,12 @@ export ARM_CLIENT_ID=<app-id>
 export ARM_CLIENT_SECRET=<password>
 export ARM_TENANT_ID=<tenant-id>
 export ARM_SUBSCRIPTION_ID=<subscription-id>
+```
 
+If you prefer to re-use the currently logged-in Azure CLI context, populate the tenant and subscription IDs automatically:
+```bash
 export ARM_TENANT_ID=$(az account show --query tenantId -o tsv)
 export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-
-read ARM_TENANT_ID ARM_SUBSCRIPTION_ID < <(az account show --query '{tenantId:tenantId,id:id}' -o tsv)
-export ARM_TENANT_ID ARM_SUBSCRIPTION_ID
 ```
 
 ## Configure Deployment Variables

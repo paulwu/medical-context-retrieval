@@ -19,7 +19,7 @@ This module creates an Azure Container Apps Environment with comprehensive secur
 
 ```hcl
 module "container_app_environment" {
-  source = "../Modules/container_app_environment"
+  source = "../modules/container_app_environment"
 
   container_app_environment_name = "my-container-env"
   location                      = "West US 3"
@@ -36,7 +36,7 @@ module "container_app_environment" {
 
 ```hcl
 module "container_app_environment" {
-  source = "../Modules/container_app_environment"
+  source = "../modules/container_app_environment"
 
   container_app_environment_name    = "my-container-env"
   location                         = "West US 3"
@@ -74,7 +74,7 @@ resource "azurerm_role_assignment" "container_env_acr_pull" {
 
 ```hcl
 module "container_app_environment" {
-  source = "../Modules/container_app_environment"
+  source = "../modules/container_app_environment"
 
   container_app_environment_name = "my-container-env"
   location                      = "West US 3"

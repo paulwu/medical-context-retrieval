@@ -14,17 +14,13 @@ This module creates an Azure Key Vault with RBAC-based authorization and optiona
 
 ```hcl
 module "key_vault" {
-  source = "./Modules/key_vault"
+  source = "./modules/key_vault"
 
   key_vault_name        = "my-keyvault-name"
-  location              = "West US 3"
-  resource_group_name   = "my-resource-group"
+  location              = local.main_location
+  resource_group_name   = azurerm_resource_group.project_main[0].name
   tenant_id             = data.azurerm_client_config.current.tenant_id
   current_user_object_id = data.azurerm_client_config.current.object_id
-  
-  # Optional: Grant OpenAI service access
-  assign_openai_permissions    = true
-  openai_identity_principal_id = azapi_resource.ai_foundry_project.openai.identity[0].principal_id
 
   tags = {
     Environment = "production"
@@ -83,3 +79,4 @@ When enabled, this module assigns the following Azure RBAC roles:
 - Soft delete is enabled with configurable retention period
 - Purge protection is disabled by default but can be enabled for production environments
 - The module supports both standalone usage and integration with AI services
+- When `assign_openai_permissions` is `true`, provide the managed identity principal ID via `openai_identity_principal_id`

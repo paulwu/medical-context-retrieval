@@ -59,12 +59,12 @@ Private DNS Zones (automatic VNet linking)
 ### Complete Private Network Setup
 ```hcl
 module "private_network" {
-  source = "../Modules/private_network"
-  
-  resource_group_name = "[orgPrefix]-[environment]"
-  location           = "[location]"
-  vnet_name          = "[orgPrefix]-[environment]-vnet"
-  vnet_address_space = ["10.240.0.0/16"]
+  source = "../modules/private_network"
+
+  resource_group_name = azurerm_resource_group.project_main[0].name
+  location            = local.main_location
+  vnet_name           = local.vnet_name
+  vnet_address_space  = ["10.240.0.0/16"]
 
   subnets = {
     container_apps_infra = {
@@ -125,7 +125,7 @@ module "private_network" {
   
   tags = {
     Environment = "[environment]"
-    Project     = "[orgPrefix]-demo"
+    Project     = "[orgPrefix]-medical-ctx"
     Security    = "private-only"
   }
 }

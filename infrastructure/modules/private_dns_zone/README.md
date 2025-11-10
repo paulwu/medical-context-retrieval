@@ -27,10 +27,10 @@ Creates an Azure Private DNS Zone and links it to one or more virtual networks.
 
 ```hcl
 module "kv_private_dns" {
-  source              = "./Modules/private_dns_zone"
+  source              = "./modules/private_dns_zone"
   zone_name           = "privatelink.vaultcore.azure.net"
-  resource_group_name = azurerm_resource_group.medical_ctx_rag[0].name
-  virtual_network_ids = { primary = module.network.vnet_id }
+  resource_group_name = azurerm_resource_group.project_main[0].name
+  virtual_network_ids = { primary = azurerm_virtual_network.main.id }
 }
 ```
 

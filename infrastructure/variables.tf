@@ -300,10 +300,4 @@ variable "storage_account_replication_type" {
   }
 }
 
-# ===================================================================================================
-# Landing Zone / Hub & Spoke Variables - REMOVED
-# These variables were designed for a hub-and-spoke architecture but are not used in the current
-# Zava demo implementation. The current architecture uses a single VNet with Container Apps integration.
-# ===================================================================================================
-# All hub & spoke variables removed to reduce configuration complexity
 

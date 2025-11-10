@@ -36,11 +36,11 @@ Provision an Azure Front Door (Standard/Premium) profile with a single endpoint,
 
 ```hcl
 module "frontdoor" {
-  source              = "./Modules/azure_frontdoor"
-  profile_name        = "fd-ai-demo"
-  resource_group_name = azurerm_resource_group.medical_ctx_rag[0].name
-  endpoint_name       = "fd-ai-demo-endpoint"
-  origin_host_name    = azurerm_container_app.main[0].ingress[0].fqdn
+  source              = "./modules/azure_frontdoor"
+  profile_name        = "fd-medical-ctx"
+  resource_group_name = azurerm_resource_group.project_main[0].name
+  endpoint_name       = "fd-medical-ctx-endpoint"
+  origin_host_name    = "[container-app-fqdn]"
   tags = {
     Environment = var.environment
   }

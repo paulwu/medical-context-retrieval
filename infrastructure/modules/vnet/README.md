@@ -30,11 +30,11 @@ Creates an Azure Virtual Network and a flexible set of subnets.
 
 ```hcl
 module "network" {
-  source              = "./Modules/vnet"
-  vnet_name           = "zava-vnet"
-  location            = local.location
-  resource_group_name = azurerm_resource_group.medical_ctx_rag[0].name
-  address_space       = ["10.50.0.0/16"]
+  source              = "./modules/vnet"
+  vnet_name           = local.vnet_name
+  location            = local.main_location
+  resource_group_name = azurerm_resource_group.project_main[0].name
+  address_space       = ["10.240.0.0/16"]
   subnets = {
     app = {
       name             = "app-subnet"

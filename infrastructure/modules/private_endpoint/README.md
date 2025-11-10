@@ -31,12 +31,12 @@ Creates an Azure Private Endpoint to a target resource (Storage, Key Vault, Cosm
 
 ```hcl
 module "pe_kv" {
-  source                        = "./Modules/private_endpoint"
+  source                        = "./modules/private_endpoint"
   name                          = "pe-keyvault"
-  location                      = local.location
-  resource_group_name           = azurerm_resource_group.medical_ctx_rag[0].name
-  subnet_id                     = module.network.subnet_ids["pe"]
-  private_connection_resource_id = azurerm_key_vault.main[0].id
+  location                      = local.main_location
+  resource_group_name           = azurerm_resource_group.project_main[0].name
+  subnet_id                     = azurerm_subnet.private_endpoints.id
+  private_connection_resource_id = azurerm_key_vault.main.id
   subresource_names             = ["vault"]
   private_dns_zone_ids          = [module.kv_private_dns.zone_id]
 }

@@ -97,7 +97,7 @@ deployments = [
 ### Basic AI Foundry with Model Deployments
 ```hcl
 module "aifoundry_1" {
-	source              = "./Modules/ai_foundry"
+	source              = "./modules/ai_foundry"
 	resource_group_name = azurerm_resource_group.main.name
 	location            = "[location1]"
 	cognitive_name      = "[orgPrefix]-[environment]-aif1-[location1]"
@@ -126,11 +126,9 @@ module "aifoundry_1" {
 
 ### Multi-Region AI Foundry Setup
 ```hcl
-# Primary region with image generation
-```hcl
 # Primary region with image models
 module "aifoundry_primary" {
-	source              = "./Modules/ai_foundry"
+	source              = "./modules/ai_foundry"
 	resource_group_name = azurerm_resource_group.main.name
 	location            = "[location1]"
 	cognitive_name      = "[orgPrefix]-[environment]-aif1-[location1]"
@@ -150,7 +148,7 @@ module "aifoundry_primary" {
 
 # Secondary region with realtime models
 module "aifoundry_secondary" {
-	source              = "./Modules/ai_foundry"
+	source              = "./modules/ai_foundry"
 	resource_group_name = azurerm_resource_group.main.name
 	location            = "[location2]"
 	cognitive_name      = "[orgPrefix]-[environment]-aif2-[location2]"
@@ -186,10 +184,11 @@ Different models are available in different regions:
 - **Sweden Central**: GPT-4o-mini-realtime-preview
 - **East US 2**: General model availability
 
-Use the provided PowerShell scripts to check model availability:
-```powershell
-# Check available models and quotas
-.\Scripts\Get-Availability-Quotas.ps1
+Use the Bash utilities in `infrastructure/scripts` to check model availability and quota:
+```bash
+cd infrastructure/scripts
+bash get-available-models.sh
+bash get-availability-quotas
 ```
 
 ## Private Networking Integration
