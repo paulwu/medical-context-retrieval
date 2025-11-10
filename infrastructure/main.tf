@@ -621,6 +621,22 @@ resource "azurerm_role_assignment" "container_app_env_acr_pull" {
 }
 
 # ----------------------------------------------------------------------------------------------------------
+# AcrPull Role Assignment for Container App (app identity)
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_role_assignment" "container_app_acr_pull" {
+  count                = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld ? 1 : 0
+  scope                = azurerm_container_registry.main[0].id
+  role_definition_name = "AcrPull"
+  principal_id         = module.container_app_environment[0].container_app_identity_principal_id
+  principal_type       = "ServicePrincipal"
+
+  depends_on = [
+    azurerm_container_registry.main,
+    module.container_app_environment
+  ]
+}
+
+# ----------------------------------------------------------------------------------------------------------
 # Cosmos DB Account Reader Role Assignment for Container Apps Environment
 # ----------------------------------------------------------------------------------------------------------
 resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {

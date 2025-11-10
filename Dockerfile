@@ -17,8 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY rag/ ./rag/
 COPY demo.ipynb .
 COPY cache/ ./cache/
-COPY faiss_medical_index.bin .
-COPY chunk_metadata.json .
 
 # Create necessary directories
 RUN mkdir -p data_pilot/pdfs artifacts
