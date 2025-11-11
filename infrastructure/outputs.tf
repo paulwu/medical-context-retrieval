@@ -4,12 +4,16 @@
 # Resource Group Outputs
 output "medical_ctx_rag_resource_group_name" {
   description = "Name of the medical_ctx_rag resource group"
-  value       = var.deploy_infrastructure ? azurerm_resource_group.project_main[0].name : null
+  value       = var.deploy_infrastructure ? local.resource_group_name : null
 }
 
 output "medical_ctx_rag_resource_group_id" {
   description = "ID of the medical_ctx_rag resource group"
-  value       = var.deploy_infrastructure ? azurerm_resource_group.project_main[0].id : null
+  value       = var.deploy_infrastructure ? (
+    var.use_existing_resource_group ? 
+    data.azurerm_resource_group.project_main_existing[0].id : 
+    azurerm_resource_group.project_main_new[0].id
+  ) : null
 }
 
 # Log Analytics Workspace Outputs
@@ -244,4 +248,31 @@ output "private_dns_zone_ids" {
 output "container_app_fqdn" {
   description = "FQDN of the Container App (origin)"
   value       = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld ? module.container_app_environment[0].container_app_fqdn : null
+}
+
+# Azure AI Search Outputs
+output "ai_search_service_id" {
+  description = "ID of the AI Search service"
+  value       = var.deploy_infrastructure && var.deploy_ai_search ? module.ai_search[0].search_service_id : null
+}
+
+output "ai_search_service_name" {
+  description = "Name of the AI Search service"
+  value       = var.deploy_infrastructure && var.deploy_ai_search ? module.ai_search[0].search_service_name : null
+}
+
+output "ai_search_service_url" {
+  description = "URL of the AI Search service"
+  value       = var.deploy_infrastructure && var.deploy_ai_search ? module.ai_search[0].search_service_url : null
+}
+
+output "ai_search_service_endpoint" {
+  description = "Endpoint of the AI Search service"
+  value       = var.deploy_infrastructure && var.deploy_ai_search ? module.ai_search[0].search_service_endpoint : null
+}
+
+output "ai_search_service_primary_key" {
+  description = "Primary admin key for the AI Search service"
+  value       = var.deploy_infrastructure && var.deploy_ai_search ? module.ai_search[0].search_service_primary_key : null
+  sensitive   = true
 }

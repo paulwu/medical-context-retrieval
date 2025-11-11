@@ -7,8 +7,8 @@ variable "environment" {
   default     = "dev"
 
   validation {
-    condition     = can(regex("^(dev|qa|prod|jp)$", var.environment))
-    error_message = "Environment must be one of: dev, qa, prod, jp."
+    condition     = can(regex("^(dev|qa|prod|jp|demo)$", var.environment))
+    error_message = "Environment must be one of: dev, qa, prod, jp, demo."
   }
 }
 
@@ -32,6 +32,21 @@ variable "additional_tags" {
   description = "Additional tags to apply to all resources"
   type        = map(string)
   default     = {}
+}
+
+# ---------------------------------------------------------------------------------------------------
+# Resource Group Configuration
+# ---------------------------------------------------------------------------------------------------
+variable "use_existing_resource_group" {
+  description = "Whether to use an existing resource group instead of creating a new one"
+  type        = bool
+  default     = false
+}
+
+variable "existing_resource_group_name" {
+  description = "Name of the existing resource group to use (required if use_existing_resource_group is true)"
+  type        = string
+  default     = ""
 }
 
 # ---------------------------------------------------------------------------------------------------
@@ -64,6 +79,12 @@ variable "deploy_ai_foundry_instances" {
 
 variable "deploy_container_app_environment" {
   description = "Whether to deploy the Container App Environment and related resources"
+  type        = bool
+  default     = true
+}
+
+variable "deploy_ai_search" {
+  description = "Whether to deploy Azure AI Search service"
   type        = bool
   default     = true
 }

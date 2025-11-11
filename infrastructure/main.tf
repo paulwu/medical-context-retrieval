@@ -51,20 +51,28 @@ data "azapi_resource_action" "log_analytics_keys_diff_sub" {
 #   count               = var.deploy_infrastructure ? 1 : 0
 #   name                = local.log_analytics_name
 #   location            = local.main_location
-#   resource_group_name = azurerm_resource_group.project_main[0].name
+#   resource_group_name = azurerm_resource_group..project_main_new[0].name
 #   sku                 = "PerGB2018"
 #   retention_in_days   = 90
 #   tags                = local.common_tags
 
-#   depends_on = [azurerm_resource_group.project_main]
+#   depends_on = [azurerm_resource_group..project_main_new]
 # }
 
 
 # ----------------------------------------------------------------------------------------------------------
-# 1) Resource Group for project
+# 1) Resource Group for project - Create new or use existing
 # ----------------------------------------------------------------------------------------------------------
-resource "azurerm_resource_group" "project_main" {
-  count    = var.deploy_infrastructure ? 1 : 0
+
+# Data source for existing resource group
+data "azurerm_resource_group" "project_main_existing" {
+  count = var.deploy_infrastructure && var.use_existing_resource_group ? 1 : 0
+  name  = var.existing_resource_group_name
+}
+
+# Create new resource group
+resource "azurerm_resource_group" "project_main_new" {
+  count    = var.deploy_infrastructure && !var.use_existing_resource_group ? 1 : 0
   name     = local.rg_project_main
   location = local.main_location
   tags = merge(local.common_tags, {
@@ -78,8 +86,8 @@ resource "azurerm_resource_group" "project_main" {
 resource "azurerm_application_insights" "main" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = local.application_insights_name
-  location            = local.main_location
-  resource_group_name = azurerm_resource_group.project_main[0].name
+  location            = local.resource_group_location
+  resource_group_name = local.resource_group_name
   application_type    = "web"
   workspace_id = var.use_existing_log_analytics ? (
     var.log_analytics_subscription_id != "" ?
@@ -90,7 +98,10 @@ resource "azurerm_application_insights" "main" {
     RGMonthlyCost = "10"
   })
 
-  depends_on = [azurerm_resource_group.project_main]
+  depends_on = [
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
+  ]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -165,8 +176,8 @@ module "private_network" {
   count  = var.deploy_infrastructure && var.deploy_private_network ? 1 : 0
   source = "./modules/private_network"
 
-  resource_group_name = azurerm_resource_group.project_main[0].name
-  location            = local.main_location
+  resource_group_name = local.resource_group_name
+  location            = local.resource_group_location
   vnet_name           = local.vnet_name
   vnet_address_space  = ["10.240.0.0/16"]
 
@@ -196,7 +207,7 @@ module "private_network" {
   tags = local.common_tags
 
   depends_on = [
-    azurerm_resource_group.project_main,
+    azurerm_resource_group.project_main_new,
     azurerm_storage_account.main,
     azurerm_cosmosdb_account.main,
     module.key_vault
@@ -209,8 +220,8 @@ module "private_network" {
 resource "azurerm_storage_account" "main" {
   count                         = var.deploy_infrastructure ? 1 : 0
   name                          = local.storage_account_name
-  resource_group_name           = azurerm_resource_group.project_main[0].name
-  location                      = local.main_location
+  resource_group_name           = local.resource_group_name
+  location                      = local.resource_group_location
   account_tier                  = var.storage_account_tier
   account_replication_type      = var.storage_account_replication_type
   min_tls_version               = "TLS1_2"
@@ -222,7 +233,10 @@ resource "azurerm_storage_account" "main" {
   identity {
     type = "SystemAssigned"
   }
-  depends_on = [azurerm_resource_group.project_main]
+  depends_on = [
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
+  ]
 }
 # ----------------------------------------------------------------------------------------------------------
 # 5) Container Registry for AI Hub
@@ -230,8 +244,8 @@ resource "azurerm_storage_account" "main" {
 resource "azurerm_container_registry" "main" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = local.container_registry_name
-  resource_group_name = azurerm_resource_group.project_main[0].name
-  location            = local.main_location
+  resource_group_name = local.resource_group_name
+  location            = local.resource_group_location
   sku                 = var.deploy_private_network ? "Premium" : var.container_registry_sku
   admin_enabled       = var.container_registry_admin_enabled
   tags = merge(local.common_tags, {
@@ -241,7 +255,10 @@ resource "azurerm_container_registry" "main" {
   identity {
     type = "SystemAssigned"
   }
-  depends_on = [azurerm_resource_group.project_main]
+  depends_on = [
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
+  ]
 }
 
 
@@ -251,8 +268,8 @@ resource "azurerm_container_registry" "main" {
 resource "azurerm_cosmosdb_account" "main" {
   count                         = var.deploy_infrastructure ? 1 : 0
   name                          = local.cosmos_db_name
-  location                      = local.main_location
-  resource_group_name           = azurerm_resource_group.project_main[0].name
+  location                      = local.resource_group_location
+  resource_group_name           = local.resource_group_name
   offer_type                    = "Standard"
   kind                          = "GlobalDocumentDB"
   public_network_access_enabled = var.deploy_private_network ? false : true
@@ -267,11 +284,14 @@ resource "azurerm_cosmosdb_account" "main" {
   }
 
   geo_location {
-    location          = local.main_location
+    location          = local.resource_group_location
     failover_priority = 0
   }
 
-  depends_on = [azurerm_resource_group.project_main]
+  depends_on = [
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
+  ]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -280,7 +300,7 @@ resource "azurerm_cosmosdb_account" "main" {
 resource "azurerm_cosmosdb_sql_database" "default" {
   count               = var.deploy_infrastructure ? 1 : 0
   name                = var.cosmos_db_database_id
-  resource_group_name = azurerm_resource_group.project_main[0].name
+  resource_group_name = local.resource_group_name
   account_name        = azurerm_cosmosdb_account.main[0].name
 
   depends_on = [azurerm_cosmosdb_account.main]
@@ -296,7 +316,7 @@ resource "azurerm_cosmosdb_sql_container" "containers" {
   } : {}
 
   name                = each.value.name
-  resource_group_name = azurerm_resource_group.project_main[0].name
+  resource_group_name = local.resource_group_name
   account_name        = azurerm_cosmosdb_account.main[0].name
   database_name       = each.value.database_name != null ? each.value.database_name : azurerm_cosmosdb_sql_database.default[0].name
   partition_key_paths = [each.value.partition_key]
@@ -313,8 +333,8 @@ module "container_app_environment" {
   source = "./modules/container_app_environment"
 
   container_app_environment_name     = local.container_app_environment_name
-  location                           = local.main_location
-  resource_group_name                = azurerm_resource_group.project_main[0].name
+  location                           = local.resource_group_location
+  resource_group_name                = local.resource_group_name
   infrastructure_subnet_id           = var.deploy_private_network ? module.private_network[0].subnet_ids["container_apps_infra"] : null
   internal_load_balancer_enabled     = var.deploy_private_network ? true : false
   enable_dedicated_workload_profiles = var.deploy_private_network ? true : false
@@ -378,7 +398,8 @@ module "container_app_environment" {
   ] : []
 
   depends_on = [
-    azurerm_resource_group.project_main,
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing,
     data.azurerm_log_analytics_workspace.existing_same_sub,
     data.azurerm_log_analytics_workspace.existing_diff_sub,
     azurerm_cosmosdb_account.main,
@@ -406,8 +427,8 @@ module "key_vault" {
   source = "./modules/key_vault"
 
   key_vault_name                  = local.key_vault_name
-  location                        = local.main_location
-  resource_group_name             = azurerm_resource_group.project_main[0].name
+  location                        = local.resource_group_location
+  resource_group_name             = local.resource_group_name
   tenant_id                       = data.azurerm_client_config.current.tenant_id
   current_user_object_id          = data.azurerm_client_config.current.object_id
   key_vault_sku                   = var.key_vault_sku
@@ -429,7 +450,8 @@ module "key_vault" {
 
 
   depends_on = [
-    azurerm_resource_group.project_main
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
   ]
 }
 
@@ -439,7 +461,7 @@ module "key_vault" {
 module "aifoundry_1" {
   count                         = var.deploy_infrastructure && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? 1 : 0
   source                        = "./modules/ai_foundry"
-  resource_group_name           = azurerm_resource_group.project_main[0].name
+  resource_group_name           = local.resource_group_name
   location                      = var.aif_location1
   cognitive_name                = local.aifoundry_account1_name
   assign_current_user_admin     = true
@@ -481,7 +503,8 @@ module "aifoundry_1" {
   ] : []
 
   depends_on = [
-    azurerm_resource_group.project_main
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
   ]
 }
 
@@ -492,12 +515,40 @@ moved {
 }
 
 # ----------------------------------------------------------------------------------------------------------
+# 10.5) Azure AI Search Service
+# ----------------------------------------------------------------------------------------------------------
+module "ai_search" {
+  count  = var.deploy_infrastructure && var.deploy_ai_search ? 1 : 0
+  source = "./modules/ai_search"
+
+  search_service_name           = local.ai_search_service_name
+  resource_group_name           = local.resource_group_name
+  location                      = local.resource_group_location
+  sku_name                      = "standard"
+  replica_count                 = 1
+  partition_count               = 1
+  public_network_access_enabled = var.deploy_private_network ? false : true
+  disable_local_auth            = false
+  semantic_search_sku           = "free"
+  hosting_mode                  = "default"
+  
+  tags = merge(local.common_tags, {
+    RGMonthlyCost = "250"
+  })
+
+  depends_on = [
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
+  ]
+}
+
+# ----------------------------------------------------------------------------------------------------------
 # 11) AI Foundry 2 - Secondary Foundry
 # ----------------------------------------------------------------------------------------------------------
 # module "aifoundry_2" {
 #   count                         = var.deploy_infrastructure && !var.destroy_ai_foundry_instances ? 1 : 0
 #   source                        = "./modules/ai_foundry"
-#   resource_group_name           = azurerm_resource_group.project_main[0].name
+#   resource_group_name           = azurerm_resource_group..project_main_new[0].name
 #   location                      = "<secondary-region>"
 #   cognitive_name                = "<secondary-aifoundry-name>"
 #   assign_current_user_admin     = true
@@ -553,7 +604,7 @@ moved {
 #   ] : []
 
 #   depends_on = [
-#     azurerm_resource_group.project_main
+#     azurerm_resource_group..project_main_new
 #   ]
 # }
 
@@ -571,7 +622,7 @@ module "azure_frontdoor" {
   count  = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
 
   profile_name        = "${local.resource_prefix}-frontdoor"
-  resource_group_name = azurerm_resource_group.project_main[0].name
+  resource_group_name = local.resource_group_name
   sku_name            = "Standard_AzureFrontDoor"
   endpoint_name       = "${local.resource_prefix}-fd-endpoint"
   origin_host_name    = var.deploy_container_app_helloworld ? module.container_app_environment[0].container_app_fqdn : "yourapp.azurecontainerapps.io"
@@ -581,7 +632,11 @@ module "azure_frontdoor" {
   tags = merge(local.common_tags, {
     RGMonthlyCost = var.deploy_private_network ? "400" : "125"
   })
-  depends_on = [module.container_app_environment, azurerm_resource_group.project_main]
+  depends_on = [
+    module.container_app_environment, 
+    azurerm_resource_group.project_main_new,
+    data.azurerm_resource_group.project_main_existing
+  ]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -660,7 +715,7 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
 #   source = "../Modules/cognitive_services"
 
 #   cognitive_name                = local.cognitive_services_name
-#   resource_group_name           = azurerm_resource_group.project_main[0].name
+#   resource_group_name           = azurerm_resource_group..project_main_new[0].name
 #   location                      = local.main_location
 #   sku_name                      = "S0"
 #   public_network_access_enabled = var.deploy_private_network ? false : true
@@ -675,7 +730,7 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
 #   tags = local.common_tags
 
 #   depends_on = [
-#     azurerm_resource_group.project_main
+#     azurerm_resource_group..project_main_new
 #   ]
 # }
 
@@ -684,7 +739,7 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
 # resource "azurerm_cdn_frontdoor_profile" "main" {
 #   count               = var.deploy_infrastructure ? 1 : 0
 #   name                = "${local.resource_prefix}-afd"
-#   resource_group_name = azurerm_resource_group.project_main[0].name
+#   resource_group_name = azurerm_resource_group..project_main_new[0].name
 #   sku_name            = "Standard_AzureFrontDoor"
 #   tags                = local.common_tags
 # }

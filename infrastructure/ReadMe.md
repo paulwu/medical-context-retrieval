@@ -16,10 +16,11 @@ This directory contains Terraform configuration for deploying the medical contex
 ## Authenticate to Azure
 ### Option 1: Azure CLI (interactive)
 ```bash
-az login
+az login --use-device-code
 az account set --subscription <subscription-id>
 
-az account set --subscription 04902013-de09-470f-9512-dc311d1d557a
+#az account set --subscription 04902013-de09-470f-9512-dc311d1d557a
+az account set --subscription ac844b56-6818-4eb6-9ae7-2454ceb83c47
 ```
 Terraform will re-use your CLI session.
 

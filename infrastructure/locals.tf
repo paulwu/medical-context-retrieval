@@ -27,6 +27,19 @@ locals {
   # Resource group names following CAF naming conventions
   rg_project_main         = local.resource_prefix
 
+  # Resource group references - use existing or new based on variables
+  resource_group_name = var.deploy_infrastructure ? (
+    var.use_existing_resource_group ? 
+    data.azurerm_resource_group.project_main_existing[0].name : 
+    azurerm_resource_group.project_main_new[0].name
+  ) : ""
+  
+  resource_group_location = var.deploy_infrastructure ? (
+    var.use_existing_resource_group ? 
+    data.azurerm_resource_group.project_main_existing[0].location : 
+    azurerm_resource_group.project_main_new[0].location
+  ) : ""
+
   # Key Vault configuration
   key_vault_name = substr(replace("${local.resource_prefix}-kv", "-", ""), 0, 24)
 
@@ -46,6 +59,9 @@ locals {
 
   application_insights_name = "${local.resource_prefix}-appi"
   container_registry_name   = lower(replace("${local.resource_prefix}acr", "-", ""))
+
+  # AI Search configuration
+  ai_search_service_name = lower("${local.resource_prefix}-search")
 
   #AI Foundry config
   aifoundry_account1_name = "${local.resource_prefix}-aif1-${var.aif_location1}"
