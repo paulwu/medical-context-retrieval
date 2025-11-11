@@ -11,6 +11,11 @@ This directory contains Terraform configuration for deploying the medical contex
    - `User Access Administrator` to assign role bindings for Key Vault, Container Registry, and other services 
    - `Role Based Access Control Administrator` for the ONEMTCWW-OMS resource group to assign role bindings for Log Analytics Workspace
    - `Azure AI Administrator` (or higher) to create AI Foundry accounts and projects
+- Azure resource providers registered in the subscription:
+   - `Microsoft.App` for Azure Container Apps (may not be registered by default)
+   - `Microsoft.ContainerRegistry` for Azure Container Registry
+   - `Microsoft.DocumentDB` for Cosmos DB (may not be registered by default)
+   - `Microsoft.KeyVault`, `Microsoft.OperationalInsights`, `Microsoft.Network`, `Microsoft.Storage`, and `Microsoft.CognitiveServices`
 - Optional: Service principal credentials if you prefer non-interactive authentication
 
 ## Authenticate to Azure
@@ -21,6 +26,7 @@ az account set --subscription <subscription-id>
 
 #az account set --subscription 04902013-de09-470f-9512-dc311d1d557a
 az account set --subscription ac844b56-6818-4eb6-9ae7-2454ceb83c47
+                              ac844b56-6818-4eb6-9ae7-2454ceb83c47
 ```
 Terraform will re-use your CLI session.
 
