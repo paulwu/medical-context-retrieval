@@ -619,7 +619,7 @@ module "ai_search" {
 # ----------------------------------------------------------------------------------------------------------
 module "azure_frontdoor" {
   source = "./modules/azure_frontdoor"
-  count  = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
+  count  = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_azure_frontdoor ? 1 : 0
 
   profile_name        = "${local.resource_prefix}-frontdoor"
   resource_group_name = local.resource_group_name

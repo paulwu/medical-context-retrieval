@@ -194,17 +194,17 @@ output "ai_models_summary" {
 # Azure Front Door Outputs
 output "azure_frontdoor_id" {
   description = "ID of the Azure Front Door profile"
-  value       = var.deploy_infrastructure && var.deploy_container_app_environment ? module.azure_frontdoor[0].profile_id : null
+  value       = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_azure_frontdoor ? module.azure_frontdoor[0].profile_id : null
 }
 
 output "azure_frontdoor_endpoint_hostname" {
   description = "Hostname of the Azure Front Door endpoint"
-  value       = var.deploy_infrastructure && var.deploy_container_app_environment ? module.azure_frontdoor[0].endpoint_host : null
+  value       = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_azure_frontdoor ? module.azure_frontdoor[0].endpoint_host : null
 }
 
 output "azure_frontdoor_endpoint_url" {
   description = "Full URL of the Azure Front Door endpoint"
-  value       = var.deploy_infrastructure && var.deploy_container_app_environment ? "https://${module.azure_frontdoor[0].endpoint_host}" : null
+  value       = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_azure_frontdoor ? "https://${module.azure_frontdoor[0].endpoint_host}" : null
 }
 
 # Network Outputs

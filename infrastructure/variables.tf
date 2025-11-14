@@ -89,6 +89,12 @@ variable "deploy_ai_search" {
   default     = true
 }
 
+variable "deploy_azure_frontdoor" {
+  description = "Whether to deploy Azure Front Door as the public entry point"
+  type        = bool
+  default     = false
+}
+
 variable "deploy_container_app_helloworld" {
   description = "Whether to deploy the Hello World demo container app"
   type        = bool
