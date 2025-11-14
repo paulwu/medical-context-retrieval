@@ -74,12 +74,34 @@ if [[ -z "$ACR_LOGIN_SERVER" ]]; then
   exit 1
 fi
 
+ACR_NAME="${ACR_LOGIN_SERVER%%.*}"
+if [[ -z "$ACR_NAME" ]]; then
+  echo "ERROR: Unable to parse ACR name from login server '$ACR_LOGIN_SERVER'." >&2
+  exit 1
+fi
+
 if ! az account show >/dev/null 2>&1; then
   echo "ERROR: Azure CLI is not logged in. Run 'az login' and retry." >&2
   exit 1
 fi
 
 FULL_IMAGE="$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG"
+
+echo "Ensuring Container App '$CONTAINER_APP_NAME' has registry access to '$ACR_LOGIN_SERVER'..."
+ACR_USERNAME=$(az acr credential show --name "$ACR_NAME" --query "username" -o tsv)
+ACR_PASSWORD=$(az acr credential show --name "$ACR_NAME" --query "passwords[0].value" -o tsv)
+
+if [[ -z "$ACR_USERNAME" || -z "$ACR_PASSWORD" ]]; then
+  echo "ERROR: Failed to retrieve ACR admin credentials. Verify admin user is enabled." >&2
+  exit 1
+fi
+
+az containerapp registry set \
+  --name "$CONTAINER_APP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --server "$ACR_LOGIN_SERVER" \
+  --username "$ACR_USERNAME" \
+  --password "$ACR_PASSWORD" >/dev/null
 
 echo "Updating Container App '$CONTAINER_APP_NAME' in resource group '$RESOURCE_GROUP' to image '$FULL_IMAGE'..."
 az containerapp update \
