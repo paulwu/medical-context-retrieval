@@ -2,7 +2,7 @@
 
 An AI-powered Retrieval-Augmented Generation (RAG) system for medical guideline search, featuring contextual header enhancement for improved retrieval accuracy.
 
-## 🚀 Quick Demo
+## 🚀 Quick Local Demo
 
 Run the interactive demo with Voilà:
 ```bash

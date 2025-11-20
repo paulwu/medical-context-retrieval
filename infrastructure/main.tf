@@ -448,11 +448,10 @@ module "container_app_environment" {
       {
         name  = "COSMOS_DB_ENDPOINT"
         value = azurerm_cosmosdb_account.main[0].endpoint
-      },
-      {
-        name        = "COSMOS_DB_KEY"
-        secret_name = "cosmos-db-key"
-      },
+      }
+    ],
+    local.cosmos_db_env_block,
+    [
       {
         name  = "STORAGE_ACCOUNT_NAME"
         value = azurerm_storage_account.main[0].name
@@ -463,12 +462,7 @@ module "container_app_environment" {
   # Secrets for demo app
   container_app_secrets = var.deploy_container_app_helloworld ? concat(
     local.azure_openai_secret_blocks,
-    [
-      {
-        name  = "cosmos-db-key"
-        value = azurerm_cosmosdb_account.main[0].primary_key
-      }
-    ]
+    local.cosmos_db_secret_blocks
   ) : []
 
   depends_on = [
@@ -539,13 +533,46 @@ resource "azurerm_key_vault_secret" "azure_openai_api_key" {
   depends_on = [module.aifoundry_1]
 }
 
-locals {
-  azure_openai_secret_available = length(azurerm_key_vault_secret.azure_openai_api_key) > 0
+# Store Cosmos DB key in Key Vault for container app consumption
+resource "azurerm_key_vault_secret" "cosmos_db_key" {
+  count        = var.deploy_infrastructure ? 1 : 0
+  name         = "cosmos-db-key"
+  value        = azurerm_cosmosdb_account.main[0].primary_key
+  key_vault_id = module.key_vault[0].key_vault_id
 
-  azure_openai_secret_blocks = local.azure_openai_secret_available ? [
+  depends_on = [azurerm_cosmosdb_account.main, module.key_vault]
+}
+
+locals {
+  azure_openai_secret_name          = "azure-openai-api-key"
+  azure_openai_secret_blocks_module = length(azurerm_key_vault_secret.azure_openai_api_key) > 0 ? [
     {
-      name                = "azure-openai-api-key"
+      name                = local.azure_openai_secret_name
       key_vault_secret_id = azurerm_key_vault_secret.azure_openai_api_key[0].versionless_id
+      identity            = "system"
+    }
+  ] : []
+  azure_openai_secret_blocks_existing = var.azure_openai_api_key_secret_id != "" ? [
+    {
+      name                = local.azure_openai_secret_name
+      key_vault_secret_id = var.azure_openai_api_key_secret_id
+      identity            = "system"
+    }
+  ] : []
+  azure_openai_secret_blocks_inline = var.azure_openai_api_key != "" ? [
+    {
+      name  = local.azure_openai_secret_name
+      value = var.azure_openai_api_key
+    }
+  ] : []
+  azure_openai_secret_blocks = length(local.azure_openai_secret_blocks_module) > 0 ? local.azure_openai_secret_blocks_module : length(local.azure_openai_secret_blocks_existing) > 0 ? local.azure_openai_secret_blocks_existing : local.azure_openai_secret_blocks_inline
+  azure_openai_secret_available = length(local.azure_openai_secret_blocks) > 0
+  cosmos_db_secret_available    = length(azurerm_key_vault_secret.cosmos_db_key) > 0
+
+  cosmos_db_secret_blocks = local.cosmos_db_secret_available ? [
+    {
+      name                = "cosmos-db-key"
+      key_vault_secret_id = azurerm_key_vault_secret.cosmos_db_key[0].versionless_id
       identity            = "system"
     }
   ] : []
@@ -553,7 +580,13 @@ locals {
   azure_openai_env_block = local.azure_openai_secret_available ? [
     {
       name        = "AZURE_OPENAI_API_KEY"
-      secret_name = "azure-openai-api-key"
+      secret_name = local.azure_openai_secret_name
+    }
+  ] : []
+  cosmos_db_env_block = local.cosmos_db_secret_available ? [
+    {
+      name        = "COSMOS_DB_KEY"
+      secret_name = "cosmos-db-key"
     }
   ] : []
 }

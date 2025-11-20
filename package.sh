@@ -106,5 +106,7 @@ if [[ -n "$CONTAINER_APP_NAME" ]]; then
     echo "  terraform -chdir=$TF_DIR apply"
     echo "    or"
     echo "  az containerapp update --name $CONTAINER_APP_NAME --resource-group $RG_NAME --image $LATEST_IMAGE"
+    echo "    or"
+    echo "  bash update.sh"
   fi
 fi

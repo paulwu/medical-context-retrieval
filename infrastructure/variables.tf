@@ -77,6 +77,19 @@ variable "deploy_ai_foundry_instances" {
   default     = true
 }
 
+variable "azure_openai_api_key" {
+  description = "Optional Azure OpenAI API key to use when AI Foundry instances are not deployed."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "azure_openai_api_key_secret_id" {
+  description = "Optional existing Key Vault secret ID for the Azure OpenAI API key. Overrides generated secrets when provided."
+  type        = string
+  default     = ""
+}
+
 variable "deploy_container_app_environment" {
   description = "Whether to deploy the Container App Environment and related resources"
   type        = bool
