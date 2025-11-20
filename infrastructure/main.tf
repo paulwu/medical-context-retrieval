@@ -374,101 +374,102 @@ module "container_app_environment" {
   ingress_target_port        = var.container_app_target_port
 
   # Environment variables for demo app
-  container_app_env_vars = var.deploy_container_app_helloworld ? [
-    {
-      name  = "AZURE_OPENAI_ENDPOINT" # Your Azure OpenAI service endpoint (e.g., https://your-service.openai.azure.com/)
-      value = var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? module.aifoundry_1[0].ai_foundry_account_endpoint : ""
-    },
-    {
-      name  = "AZURE_OPENAI_API_KEY" # Your Azure OpenAI API key (found in Azure portal > Keys and Endpoint)
-      value = "azure-openai-api-key"
-    },
-    {
-      name  = "AZURE_OPENAI_API_VERSION" # Azure OpenAI API version (leave as default unless you need a specific version)
-      value = "2024-08-01-preview"
-    },
-    {
-      name  = "AOAI_EMBED_MODEL" # Embedding model deployment name# Embedding model deployment name (e.g., text-embedding-3-large, text-embedding-ada-002)
-      value = "text-embedding-3-large"
-    },
-    {
-      name  = "AOAI_CHAT_MODEL" # Chat/completion model deployment name (e.g., gpt-4, gpt-35-turbo, gpt-4o-mini)
-      value = "gpt-5-mini"
-    },
-    {
-      name  = "REQUESTS_PER_MIN" # Rate limiting (requests per minute)
-      value = "60"
-    },
-    {
-      name  = "TOKENS_PER_MIN" # Token limits (tokens per minute)
-      value = "60000"
-    },
-    {
-      name  = "EST_TOKENS_PER_REQUEST" # Estimated tokens per request for rate limiting calculations
-      value = "200"
-    },
-    # Optional:  Fine-tune how content is processed and chunked
-    {
-      name  = "SEMANTIC_MAX_WORDS" # Maximum words for semantic processing
-      value = "300"
-    },
-    {
-      name  = "HEADER_MAX_CHARS" # Maximum characters allowed in headers
-      value = "200"
-    },
-    {
-      name  = "HEADER_ADVANCED" # Enable advanced header processing (1 = enabled, 0 = disabled)
-      value = "1"
-    },
-    # Header chunk processing settings
-    {
-      name  = "HEADER_CHUNK_HEAD"
-      value = "850"
-    },
-    {
-      name  = "HEADER_CHUNK_TAIL"
-      value = "350"
-    },
-    {
-      name  = "HEADER_NEIGHBOR_CHARS"
-      value = "140"
-    },
-    {
-      name  = "HEADER_DOC_SUMMARY_CHARS"
-      value = "600"
-    },
-    {
-      name  = "HEADER_KEYWORD_COUNT="
-      value = "12"
-    },
-    {
-      name  = "EMBED_ZERO_ON_MISSING" #Optional Dev: Set to "1" to enable zero embeddings on missing content (for testing)
-      value = "0"
-    },
-    {
-      name  = "COSMOS_DB_ENDPOINT"
-      value = azurerm_cosmosdb_account.main[0].endpoint
-    },
-    {
-      name        = "COSMOS_DB_KEY"
-      secret_name = "cosmos-db-key"
-    },
-    {
-      name  = "STORAGE_ACCOUNT_NAME"
-      value = azurerm_storage_account.main[0].name
-    }
-  ] : []
+  container_app_env_vars = var.deploy_container_app_helloworld ? concat(
+    [
+      {
+        name  = "AZURE_OPENAI_ENDPOINT" # Your Azure OpenAI service endpoint (e.g., https://your-service.openai.azure.com/)
+        value = try(module.aifoundry_1[0].ai_foundry_account_endpoint, "")
+      }
+    ],
+    local.azure_openai_env_block,
+    [
+      {
+        name  = "AZURE_OPENAI_API_VERSION" # Azure OpenAI API version (leave as default unless you need a specific version)
+        value = "2024-08-01-preview"
+      },
+      {
+        name  = "AOAI_EMBED_MODEL" # Embedding model deployment name# Embedding model deployment name (e.g., text-embedding-3-large, text-embedding-ada-002)
+        value = "text-embedding-3-large"
+      },
+      {
+        name  = "AOAI_CHAT_MODEL" # Chat/completion model deployment name (e.g., gpt-4, gpt-35-turbo, gpt-4o-mini)
+        value = "gpt-5-mini"
+      },
+      {
+        name  = "REQUESTS_PER_MIN" # Rate limiting (requests per minute)
+        value = "60"
+      },
+      {
+        name  = "TOKENS_PER_MIN" # Token limits (tokens per minute)
+        value = "60000"
+      },
+      {
+        name  = "EST_TOKENS_PER_REQUEST" # Estimated tokens per request for rate limiting calculations
+        value = "200"
+      },
+      # Optional:  Fine-tune how content is processed and chunked
+      {
+        name  = "SEMANTIC_MAX_WORDS" # Maximum words for semantic processing
+        value = "300"
+      },
+      {
+        name  = "HEADER_MAX_CHARS" # Maximum characters allowed in headers
+        value = "200"
+      },
+      {
+        name  = "HEADER_ADVANCED" # Enable advanced header processing (1 = enabled, 0 = disabled)
+        value = "1"
+      },
+      # Header chunk processing settings
+      {
+        name  = "HEADER_CHUNK_HEAD"
+        value = "850"
+      },
+      {
+        name  = "HEADER_CHUNK_TAIL"
+        value = "350"
+      },
+      {
+        name  = "HEADER_NEIGHBOR_CHARS"
+        value = "140"
+      },
+      {
+        name  = "HEADER_DOC_SUMMARY_CHARS"
+        value = "600"
+      },
+      {
+        name  = "HEADER_KEYWORD_COUNT"
+        value = "12"
+      },
+      {
+        name  = "EMBED_ZERO_ON_MISSING" #Optional Dev: Set to "1" to enable zero embeddings on missing content (for testing)
+        value = "0"
+      },
+      {
+        name  = "COSMOS_DB_ENDPOINT"
+        value = azurerm_cosmosdb_account.main[0].endpoint
+      },
+      {
+        name        = "COSMOS_DB_KEY"
+        secret_name = "cosmos-db-key"
+      },
+      {
+        name  = "STORAGE_ACCOUNT_NAME"
+        value = azurerm_storage_account.main[0].name
+      }
+    ]
+  ) : []
 
   # Secrets for demo app
-  container_app_secrets = var.deploy_container_app_helloworld ? [
-    {
-      name  = "azure-openai-api-key"
-      value = try(module.aifoundry_1[0].ai_foundry_account_key, "")
-      }, {
-      name  = "cosmos-db-key"
-      value = azurerm_cosmosdb_account.main[0].primary_key
-    }
-  ] : []
+  container_app_secrets = var.deploy_container_app_helloworld ? concat(
+    local.azure_openai_secret_blocks,
+    [
+      {
+        name  = "cosmos-db-key"
+        value = azurerm_cosmosdb_account.main[0].primary_key
+      }
+    ]
+  ) : []
 
   depends_on = [
     azurerm_resource_group.project_main_new,
@@ -526,6 +527,35 @@ module "key_vault" {
     azurerm_resource_group.project_main_new,
     data.azurerm_resource_group.project_main_existing
   ]
+}
+
+# Store Azure OpenAI key in Key Vault for container app consumption
+resource "azurerm_key_vault_secret" "azure_openai_api_key" {
+  count        = var.deploy_infrastructure && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? 1 : 0
+  name         = "azure-openai-api-key"
+  value        = module.aifoundry_1[0].ai_foundry_account_key
+  key_vault_id = module.key_vault[0].key_vault_id
+
+  depends_on = [module.aifoundry_1]
+}
+
+locals {
+  azure_openai_secret_available = length(azurerm_key_vault_secret.azure_openai_api_key) > 0
+
+  azure_openai_secret_blocks = local.azure_openai_secret_available ? [
+    {
+      name                = "azure-openai-api-key"
+      key_vault_secret_id = azurerm_key_vault_secret.azure_openai_api_key[0].versionless_id
+      identity            = "system"
+    }
+  ] : []
+
+  azure_openai_env_block = local.azure_openai_secret_available ? [
+    {
+      name        = "AZURE_OPENAI_API_KEY"
+      secret_name = "azure-openai-api-key"
+    }
+  ] : []
 }
 
 # ----------------------------------------------------------------------------------------------------------

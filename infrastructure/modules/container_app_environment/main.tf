@@ -116,8 +116,10 @@ resource "azurerm_container_app" "helloworld" {
   dynamic "secret" {
     for_each = var.container_app_secrets
     content {
-      name  = secret.value.name
-      value = secret.value.value
+      name                = secret.value.name
+      value               = try(secret.value.value, null)
+      key_vault_secret_id = try(secret.value.key_vault_secret_id, null)
+      identity            = try(secret.value.identity, null)
     }
   }
 

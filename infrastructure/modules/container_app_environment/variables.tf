@@ -147,8 +147,10 @@ variable "container_app_env_vars" {
 variable "container_app_secrets" {
   description = "Secrets for the container app"
   type = list(object({
-    name  = string
-    value = string
+    name                = string
+    value               = optional(string)
+    key_vault_secret_id = optional(string)
+    identity            = optional(string)
   }))
   default = []
 }
