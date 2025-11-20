@@ -15,9 +15,12 @@
 			"terragrunt": "latest"
 		}
 	},
-
 	// Forward ports for demo and admin interfaces
-	"forwardPorts": [8866, 8867, 8888],
+	"forwardPorts": [
+		8866,
+		8867,
+		8888
+	],
 	"portsAttributes": {
 		"8866": {
 			"label": "Demo Interface",
@@ -32,13 +35,14 @@
 			"onAutoForward": "notify"
 		}
 	},
-
 	// Install dependencies after container is created
 	"postCreateCommand": "pip install --no-cache-dir -r requirements.txt && pip install --upgrade ipykernel jupyter notebook && python -m ipykernel install --user --name python3 --display-name 'Python 3' && chmod +x *.sh && dos2unix *.sh 2>/dev/null || sed -i 's/\\r$//' *.sh && mkdir -p cache",
-
+	"mounts": [
+		// Mount the Windows C: drive folder inside the container (use WSL path when Docker runs on Linux)
+		"source=/mnt/c/GitHub_paulwu,target=/host-c,type=bind,consistency=cached"
+	]
 	// Configure tool-specific properties.
 	// "customizations": {},
-
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }
