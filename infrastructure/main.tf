@@ -378,7 +378,7 @@ module "container_app_environment" {
     [
       {
         name  = "AZURE_OPENAI_ENDPOINT" # Your Azure OpenAI service endpoint (e.g., https://your-service.openai.azure.com/)
-        value = try(module.aifoundry_1[0].ai_foundry_account_endpoint, "")
+        value = local.azure_openai_endpoint
       }
     ],
     local.azure_openai_env_block,
@@ -523,14 +523,50 @@ module "key_vault" {
   ]
 }
 
+# Data sources for existing AI Foundry account when reusing an existing project
+data "azapi_resource" "existing_ai_foundry_account_default" {
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription == "" ? 1 : 0
+  type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
+  resource_id            = var.existing_ai_foundry_project
+  provider               = azapi
+  response_export_values = ["properties"]
+}
+
+data "azapi_resource" "existing_ai_foundry_account_subscription" {
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription != "" ? 1 : 0
+  type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
+  resource_id            = var.existing_ai_foundry_project
+  provider               = azapi.existing_ai_foundry_subscription
+  response_export_values = ["properties"]
+}
+
+data "azapi_resource_action" "existing_ai_foundry_account_keys_default" {
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription == "" ? 1 : 0
+  type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
+  resource_id            = var.existing_ai_foundry_project
+  action                 = "listKeys"
+  response_export_values = ["*"]
+  provider               = azapi
+  depends_on             = [data.azapi_resource.existing_ai_foundry_account_default]
+}
+
+data "azapi_resource_action" "existing_ai_foundry_account_keys_subscription" {
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription != "" ? 1 : 0
+  type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
+  resource_id            = var.existing_ai_foundry_project
+  action                 = "listKeys"
+  response_export_values = ["*"]
+  provider               = azapi.existing_ai_foundry_subscription
+  depends_on             = [data.azapi_resource.existing_ai_foundry_account_subscription]
+}
+
 # Store Azure OpenAI key in Key Vault for container app consumption
 resource "azurerm_key_vault_secret" "azure_openai_api_key" {
-  count        = var.deploy_infrastructure && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? 1 : 0
+  count        = var.deploy_infrastructure && ((var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances) || var.use_existing_ai_foundry_project) ? 1 : 0
   name         = "azure-openai-api-key"
-  value        = module.aifoundry_1[0].ai_foundry_account_key
+  value        = var.use_existing_ai_foundry_project ? local.existing_ai_foundry_account_key : module.aifoundry_1[0].ai_foundry_account_key
   key_vault_id = module.key_vault[0].key_vault_id
-
-  depends_on = [module.aifoundry_1]
+  depends_on   = [module.key_vault]
 }
 
 # Store Cosmos DB key in Key Vault for container app consumption
@@ -544,19 +580,34 @@ resource "azurerm_key_vault_secret" "cosmos_db_key" {
 }
 
 locals {
-  azure_openai_secret_name          = "azure-openai-api-key"
+  azure_openai_secret_name = "azure-openai-api-key"
+  existing_ai_foundry_account_endpoint = coalesce(
+    try(data.azapi_resource.existing_ai_foundry_account_default[0].output.properties.endpoint, null),
+    try(data.azapi_resource.existing_ai_foundry_account_subscription[0].output.properties.endpoint, null),
+    null
+  )
+  existing_ai_foundry_account_key = coalesce(
+    try(data.azapi_resource_action.existing_ai_foundry_account_keys_default[0].output.key1, null),
+    try(data.azapi_resource_action.existing_ai_foundry_account_keys_subscription[0].output.key1, null),
+    null
+  )
+  azure_openai_endpoint = coalesce(
+    try(module.aifoundry_1[0].ai_foundry_account_endpoint, null),
+    local.existing_ai_foundry_account_endpoint,
+    ""
+  )
   azure_openai_secret_blocks_module = length(azurerm_key_vault_secret.azure_openai_api_key) > 0 ? [
     {
       name                = local.azure_openai_secret_name
       key_vault_secret_id = azurerm_key_vault_secret.azure_openai_api_key[0].versionless_id
-      identity            = "system"
+      identity            = "System"
     }
   ] : []
   azure_openai_secret_blocks_existing = var.azure_openai_api_key_secret_id != "" ? [
     {
       name                = local.azure_openai_secret_name
       key_vault_secret_id = var.azure_openai_api_key_secret_id
-      identity            = "system"
+      identity            = "System"
     }
   ] : []
   azure_openai_secret_blocks_inline = var.azure_openai_api_key != "" ? [
@@ -565,15 +616,16 @@ locals {
       value = var.azure_openai_api_key
     }
   ] : []
-  azure_openai_secret_blocks = length(local.azure_openai_secret_blocks_module) > 0 ? local.azure_openai_secret_blocks_module : length(local.azure_openai_secret_blocks_existing) > 0 ? local.azure_openai_secret_blocks_existing : local.azure_openai_secret_blocks_inline
-  azure_openai_secret_available = length(local.azure_openai_secret_blocks) > 0
-  cosmos_db_secret_available    = length(azurerm_key_vault_secret.cosmos_db_key) > 0
+  azure_openai_secret_blocks        = length(local.azure_openai_secret_blocks_module) > 0 ? local.azure_openai_secret_blocks_module : length(local.azure_openai_secret_blocks_existing) > 0 ? local.azure_openai_secret_blocks_existing : local.azure_openai_secret_blocks_inline
+  azure_openai_secret_available     = length(local.azure_openai_secret_blocks) > 0
+  container_app_requires_openai_key = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld
+  cosmos_db_secret_available        = length(azurerm_key_vault_secret.cosmos_db_key) > 0
 
   cosmos_db_secret_blocks = local.cosmos_db_secret_available ? [
     {
       name                = "cosmos-db-key"
       key_vault_secret_id = azurerm_key_vault_secret.cosmos_db_key[0].versionless_id
-      identity            = "system"
+      identity            = "System"
     }
   ] : []
 
@@ -591,8 +643,15 @@ locals {
   ] : []
 }
 
+check "azure_openai_key_supplied" {
+  assert {
+    condition     = !(local.container_app_requires_openai_key && !local.azure_openai_secret_available)
+    error_message = "Azure OpenAI API key must be supplied via AI Foundry deployment, azure_openai_api_key_secret_id, or azure_openai_api_key when deploying the demo container app."
+  }
+}
+
 # ----------------------------------------------------------------------------------------------------------
-# 10) AI Foundry 1 in WestUS3
+# 10) AI Foundry 1 - Primary Foundry
 # ----------------------------------------------------------------------------------------------------------
 module "aifoundry_1" {
   count                         = var.deploy_infrastructure && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? 1 : 0
@@ -679,77 +738,6 @@ module "ai_search" {
 }
 
 # ----------------------------------------------------------------------------------------------------------
-# 11) AI Foundry 2 - Secondary Foundry
-# ----------------------------------------------------------------------------------------------------------
-# module "aifoundry_2" {
-#   count                         = var.deploy_infrastructure && !var.destroy_ai_foundry_instances ? 1 : 0
-#   source                        = "./modules/ai_foundry"
-#   resource_group_name           = azurerm_resource_group..project_main_new[0].name
-#   location                      = "<secondary-region>"
-#   cognitive_name                = "<secondary-aifoundry-name>"
-#   assign_current_user_admin     = true
-#   current_user_object_id        = data.azurerm_client_config.current.object_id
-#   public_network_access_enabled = var.deploy_private_network ? false : true
-#   create_deployments            = true
-#   #create_deployments            = var.deploy_ai_model_deployments
-#   create_ai_foundry_project = true
-#   tags = merge(local.common_tags, {
-#     RGMonthlyCost = "50"
-#   })
-
-#   deployments = var.deploy_ai_model_deployments ? [
-#     # {
-#     #   name = "gpt-4o-mini-realtime-preview"
-#     #   model = {
-#     #     format          = "OpenAI"
-#     #     name            = "gpt-4o-mini-realtime-preview"
-#     #     version         = "2024-12-17"
-#     #     rai_policy_name = "Microsoft.Default"
-#     #   }
-#     #   sku = {
-#     #     name     = "GlobalStandard"
-#     #     capacity = 6
-#     #   }
-#     # },
-#     # {
-#     #   name = "gpt-image-1"
-#     #   model = {
-#     #     format          = "OpenAI"
-#     #     name            = "gpt-image-1"
-#     #     version         = "2025-04-15"
-#     #     rai_policy_name = "Microsoft.Default"
-#     #   }
-#     #   sku = {
-#     #     name     = "GlobalStandard"
-#     #     capacity = 3
-#     #   }
-#     # },
-#     # {
-#     #   name = "sora"
-#     #   model = {
-#     #     format          = "OpenAI"
-#     #     name            = "sora"
-#     #     version         = "2025-05-02"
-#     #     rai_policy_name = "Microsoft.Default"
-#     #   }
-#     #   sku = {
-#     #     name     = "GlobalStandard"
-#     #     capacity = 60
-#     #   }
-#     # }
-#   ] : []
-
-#   depends_on = [
-#     azurerm_resource_group..project_main_new
-#   ]
-# }
-
-# moved {
-#   from = module.aifoundry_2
-#   to   = module.aifoundry_2[0]
-# }
-
-# ----------------------------------------------------------------------------------------------------------
 # 13) Azure Front Door
 #     Azure Front Door for Container App protection. If Container App Environment is deployed, create Front Door to protect it.
 # ----------------------------------------------------------------------------------------------------------
@@ -794,6 +782,20 @@ resource "azurerm_role_assignment" "container_app_env_kv_secrets_user" {
     module.container_app_environment
   ]
 }
+
+resource "azurerm_role_assignment" "container_app_kv_secrets_user" {
+  count                = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld ? 1 : 0
+  scope                = module.key_vault[0].key_vault_id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = module.container_app_environment[0].container_app_identity_principal_id
+  principal_type       = "ServicePrincipal"
+
+  depends_on = [
+    module.key_vault,
+    module.container_app_environment
+  ]
+}
+
 
 # ----------------------------------------------------------------------------------------------------------
 # AcrPull Role Assignment for Container Apps Environment

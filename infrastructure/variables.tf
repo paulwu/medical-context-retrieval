@@ -77,6 +77,29 @@ variable "deploy_ai_foundry_instances" {
   default     = true
 }
 
+variable "use_existing_ai_foundry_project" {
+  description = "Use an existing Azure AI Foundry (Cognitive Services) account instead of creating a new one."
+  type        = bool
+  default     = false
+}
+
+variable "existing_ai_foundry_project" {
+  description = "Fully qualified Resource ID of the existing Azure AI Foundry (Cognitive Services) account to reuse when use_existing_ai_foundry_project is true."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = !var.use_existing_ai_foundry_project || var.existing_ai_foundry_project == "" || can(regex("^/subscriptions/.+/resourceGroups/.+/providers/Microsoft\\.CognitiveServices/accounts/.+$", var.existing_ai_foundry_project))
+    error_message = "existing_ai_foundry_project must be a full resource ID starting with /subscriptions/... when use_existing_ai_foundry_project is true."
+  }
+}
+
+variable "existing_ai_foundry_project_subscription" {
+  description = "Optional subscription ID for the existing Azure AI Foundry account. Leave blank if it resides in the primary subscription."
+  type        = string
+  default     = ""
+}
+
 variable "azure_openai_api_key" {
   description = "Optional Azure OpenAI API key to use when AI Foundry instances are not deployed."
   type        = string

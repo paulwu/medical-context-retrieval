@@ -4,6 +4,12 @@ We have created a home in the EXP tenant to house the application. Step 1 is alr
 ## 1. Create the Azure resources
 The `/infrastructure` folder contains the Terraform code for deploying the resources. See the `/infstruture/ReadMe.md` for more details.
 
+> **Heads up:** The Container App demo requires an Azure OpenAI API key. If `deploy_ai_foundry_instances` is set to `false`, either set `use_existing_ai_foundry_project=true` with `existing_ai_foundry_project` pointing to the Cognitive Services account you want to reuse, provide an existing Key Vault secret ID through `azure_openai_api_key_secret_id`, or supply the key directly via `azure_openai_api_key` in your `terraform.tfvars`. Terraform now validates this requirement and will stop with a helpful error if the key is missing when the demo app is enabled.
+
+Recommended workflow:
+- Update `infrastructure/terraform.tfvars` with the correct subscription IDs, resource IDs, and Azure OpenAI configuration (either deploy a new AI Foundry instance or reuse an existing account as noted above).
+- Run `terraform -chdir=infrastructure init` (first use only), `terraform -chdir=infrastructure plan`, then `terraform -chdir=infrastructure apply` to create or update the Azure resources. The plan/apply steps now handle wiring the Container App secrets to Key Vault automatically.
+
 
 ## 2. Create a Package
 After the resources are deployed using Terrform, run `bash package.sh` to create a container package using the instructions contained in the `Dockerfile` and publish it to the Azure Container Registry created by the Terraform script.
@@ -89,7 +95,7 @@ Update complete.
 The Container App instance require a few more steps for the application to work.
 1. Navigate to the Container App instance (medctx-demo-ca) in the Azure Portal
 2. Navigate to Application > Containers > Properties. Verify the container "demo-app" is pointed to Azure Container Registry `medctxdemoacr.azurecr.io` with the image `medical-context-rag`
-3. Under the `Environment variables` tab, find the "AZURE_OPENAI_ENDPOINT" variable and update the value to the appropriate Azure OpenAI Endpoint and click [Save as a new revistion] to save the update.
+3. Under the `Environment variables` tab, confirm "AZURE_OPENAI_ENDPOINT" points to the correct endpoint and that "AZURE_OPENAI_API_KEY" is sourced from the Key Vault secret `azure-openai-api-key`. Terraform populates these values automatically—only adjust if you intentionally need a different endpoint.
 4. Navigate to Networking > Ingress blade. Make sure the 'Ingress' box is checked and change the Target port to `8866` (default to port 80).
 5. Navigate to the 'Overview' blade of the container app. Restart the container app by clicking [Stop] to stop the Container App and then [Start] to initiate the application again.
 6. While you are in the 'Overview' blade, capture the Application url for later use.

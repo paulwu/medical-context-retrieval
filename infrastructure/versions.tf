@@ -37,3 +37,9 @@ provider "azapi" {
   alias           = "log_analytics_subscription"
   subscription_id = var.log_analytics_subscription_id != "" ? var.log_analytics_subscription_id : null
 }
+
+# Provider alias for existing AI Foundry account in a different subscription
+provider "azapi" {
+  alias           = "existing_ai_foundry_subscription"
+  subscription_id = var.existing_ai_foundry_project_subscription != "" ? var.existing_ai_foundry_project_subscription : null
+}
