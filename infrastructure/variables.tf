@@ -83,18 +83,18 @@ variable "use_existing_ai_foundry_project" {
   default     = false
 }
 
-variable "existing_ai_foundry_project" {
+variable "existing_ai_foundry_id" {
   description = "Fully qualified Resource ID of the existing Azure AI Foundry (Cognitive Services) account to reuse when use_existing_ai_foundry_project is true."
   type        = string
   default     = ""
 
   validation {
-    condition     = !var.use_existing_ai_foundry_project || var.existing_ai_foundry_project == "" || can(regex("^/subscriptions/.+/resourceGroups/.+/providers/Microsoft\\.CognitiveServices/accounts/.+$", var.existing_ai_foundry_project))
-    error_message = "existing_ai_foundry_project must be a full resource ID starting with /subscriptions/... when use_existing_ai_foundry_project is true."
+    condition     = !var.use_existing_ai_foundry_project || var.existing_ai_foundry_id == "" || can(regex("^/subscriptions/.+/resourceGroups/.+/providers/Microsoft\\.CognitiveServices/accounts/.+$", var.existing_ai_foundry_id))
+    error_message = "existing_ai_foundry_id must be a full resource ID starting with /subscriptions/... when use_existing_ai_foundry_project is true."
   }
 }
 
-variable "existing_ai_foundry_project_subscription" {
+variable "existing_ai_foundry_subscription_id" {
   description = "Optional subscription ID for the existing Azure AI Foundry account. Leave blank if it resides in the primary subscription."
   type        = string
   default     = ""
@@ -332,7 +332,7 @@ variable "existing_log_analytics_resource_group_name" {
   default     = ""
 }
 
-variable "log_analytics_subscription_id" {
+variable "existing_log_analytics_subscription_id" {
   description = "Subscription ID where the Log Analytics workspace is located (leave empty if same subscription)"
   type        = string
   default     = ""

@@ -25,21 +25,21 @@ provider "azapi" {
 }
 
 # Provider alias for Log Analytics workspace in different subscription
-# Only used when log_analytics_subscription_id is specified
+# Only used when existing_log_analytics_subscription_id is specified
 provider "azurerm" {
   alias           = "log_analytics_subscription"
-  subscription_id = var.log_analytics_subscription_id != "" ? var.log_analytics_subscription_id : null
+  subscription_id = var.existing_log_analytics_subscription_id != "" ? var.existing_log_analytics_subscription_id : null
   features {}
   resource_provider_registrations = "core"
 }
 
 provider "azapi" {
   alias           = "log_analytics_subscription"
-  subscription_id = var.log_analytics_subscription_id != "" ? var.log_analytics_subscription_id : null
+  subscription_id = var.existing_log_analytics_subscription_id != "" ? var.existing_log_analytics_subscription_id : null
 }
 
 # Provider alias for existing AI Foundry account in a different subscription
 provider "azapi" {
   alias           = "existing_ai_foundry_subscription"
-  subscription_id = var.existing_ai_foundry_project_subscription != "" ? var.existing_ai_foundry_project_subscription : null
+  subscription_id = var.existing_ai_foundry_subscription_id != "" ? var.existing_ai_foundry_subscription_id : null
 }

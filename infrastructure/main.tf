@@ -8,18 +8,18 @@ data "azuread_client_config" "current" {}
 # - Log Analytics Workspace --------------------------------------------------------------------------------
 #   In EXP, we have to use an existing LAW in a different subscription. To enable that:
 #    Set variable use_existing_log_analytics to true
-#    Set variable log_analytics_subscription_id to the ID of the subscription containing the existing LAW
+#    Set variable existing_log_analytics_subscription_id to the ID of the subscription containing the existing LAW
 # ----------------------------------------------------------------------------------------------------------
 # Data source for existing Log Analytics workspace (same subscription)
 data "azurerm_log_analytics_workspace" "existing_same_sub" {
-  count               = var.use_existing_log_analytics && var.log_analytics_subscription_id == "" ? 1 : 0
+  count               = var.use_existing_log_analytics && var.existing_log_analytics_subscription_id == "" ? 1 : 0
   name                = var.existing_log_analytics_workspace_name
   resource_group_name = var.existing_log_analytics_resource_group_name
 }
 
 # Data source for existing Log Analytics workspace (different subscription)
 data "azurerm_log_analytics_workspace" "existing_diff_sub" {
-  count               = var.use_existing_log_analytics && var.log_analytics_subscription_id != "" ? 1 : 0
+  count               = var.use_existing_log_analytics && var.existing_log_analytics_subscription_id != "" ? 1 : 0
   provider            = azurerm.log_analytics_subscription
   name                = var.existing_log_analytics_workspace_name
   resource_group_name = var.existing_log_analytics_resource_group_name
@@ -27,7 +27,7 @@ data "azurerm_log_analytics_workspace" "existing_diff_sub" {
 
 # Get Log Analytics workspace shared keys using azapi (same subscription)
 data "azapi_resource_action" "log_analytics_keys_same_sub" {
-  count       = var.use_existing_log_analytics && var.log_analytics_subscription_id == "" ? 1 : 0
+  count       = var.use_existing_log_analytics && var.existing_log_analytics_subscription_id == "" ? 1 : 0
   type        = "Microsoft.OperationalInsights/workspaces@2022-10-01"
   resource_id = data.azurerm_log_analytics_workspace.existing_same_sub[0].id
   action      = "sharedKeys"
@@ -36,7 +36,7 @@ data "azapi_resource_action" "log_analytics_keys_same_sub" {
 
 # Get Log Analytics workspace shared keys using azapi (different subscription)
 data "azapi_resource_action" "log_analytics_keys_diff_sub" {
-  count       = var.use_existing_log_analytics && var.log_analytics_subscription_id != "" ? 1 : 0
+  count       = var.use_existing_log_analytics && var.existing_log_analytics_subscription_id != "" ? 1 : 0
   provider    = azapi.log_analytics_subscription
   type        = "Microsoft.OperationalInsights/workspaces@2022-10-01"
   resource_id = data.azurerm_log_analytics_workspace.existing_diff_sub[0].id
@@ -90,7 +90,7 @@ resource "azurerm_application_insights" "main" {
   resource_group_name = local.resource_group_name
   application_type    = "web"
   workspace_id = var.use_existing_log_analytics ? (
-    var.log_analytics_subscription_id != "" ?
+    var.existing_log_analytics_subscription_id != "" ?
     data.azurerm_log_analytics_workspace.existing_diff_sub[0].id :
     data.azurerm_log_analytics_workspace.existing_same_sub[0].id
   ) : null
@@ -344,21 +344,21 @@ module "container_app_environment" {
 
   # Configure with existing Log Analytics workspace customer ID
   log_analytics_workspace_customer_id = var.use_existing_log_analytics ? (
-    var.log_analytics_subscription_id != "" ?
+    var.existing_log_analytics_subscription_id != "" ?
     data.azurerm_log_analytics_workspace.existing_diff_sub[0].workspace_id :
     data.azurerm_log_analytics_workspace.existing_same_sub[0].workspace_id
   ) : null
 
   # Configure with existing Log Analytics workspace shared key
   log_analytics_workspace_shared_key = var.use_existing_log_analytics ? (
-    var.log_analytics_subscription_id != "" ?
+    var.existing_log_analytics_subscription_id != "" ?
     try(jsondecode(data.azapi_resource_action.log_analytics_keys_diff_sub[0].output).primarySharedKey, null) :
     try(jsondecode(data.azapi_resource_action.log_analytics_keys_same_sub[0].output).primarySharedKey, null)
   ) : null
 
   # Configure Log Analytics workspace resource ID for diagnostic settings
   log_analytics_workspace_id = var.use_existing_log_analytics ? (
-    var.log_analytics_subscription_id != "" ?
+    var.existing_log_analytics_subscription_id != "" ?
     data.azurerm_log_analytics_workspace.existing_diff_sub[0].id :
     data.azurerm_log_analytics_workspace.existing_same_sub[0].id
   ) : null
@@ -525,25 +525,25 @@ module "key_vault" {
 
 # Data sources for existing AI Foundry account when reusing an existing project
 data "azapi_resource" "existing_ai_foundry_account_default" {
-  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription == "" ? 1 : 0
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id == "" ? 1 : 0
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
-  resource_id            = var.existing_ai_foundry_project
+  resource_id            = var.existing_ai_foundry_id
   provider               = azapi
   response_export_values = ["properties"]
 }
 
 data "azapi_resource" "existing_ai_foundry_account_subscription" {
-  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription != "" ? 1 : 0
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id != "" ? 1 : 0
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
-  resource_id            = var.existing_ai_foundry_project
+  resource_id            = var.existing_ai_foundry_id
   provider               = azapi.existing_ai_foundry_subscription
   response_export_values = ["properties"]
 }
 
 data "azapi_resource_action" "existing_ai_foundry_account_keys_default" {
-  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription == "" ? 1 : 0
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id == "" ? 1 : 0
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
-  resource_id            = var.existing_ai_foundry_project
+  resource_id            = var.existing_ai_foundry_id
   action                 = "listKeys"
   response_export_values = ["*"]
   provider               = azapi
@@ -551,9 +551,9 @@ data "azapi_resource_action" "existing_ai_foundry_account_keys_default" {
 }
 
 data "azapi_resource_action" "existing_ai_foundry_account_keys_subscription" {
-  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_project_subscription != "" ? 1 : 0
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id != "" ? 1 : 0
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
-  resource_id            = var.existing_ai_foundry_project
+  resource_id            = var.existing_ai_foundry_id
   action                 = "listKeys"
   response_export_values = ["*"]
   provider               = azapi.existing_ai_foundry_subscription

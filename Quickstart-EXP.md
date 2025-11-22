@@ -4,7 +4,7 @@ We have created a home in the EXP tenant to house the application. Step 1 is alr
 ## 1. Create the Azure resources
 The `/infrastructure` folder contains the Terraform code for deploying the resources. See the `/infstruture/ReadMe.md` for more details.
 
-> **Heads up:** The Container App demo requires an Azure OpenAI API key. If `deploy_ai_foundry_instances` is set to `false`, either set `use_existing_ai_foundry_project=true` with `existing_ai_foundry_project` pointing to the Cognitive Services account you want to reuse, provide an existing Key Vault secret ID through `azure_openai_api_key_secret_id`, or supply the key directly via `azure_openai_api_key` in your `terraform.tfvars`. Terraform now validates this requirement and will stop with a helpful error if the key is missing when the demo app is enabled.
+> **Heads up:** The Container App demo requires an Azure OpenAI API key. If `deploy_ai_foundry_instances` is set to `false`, either set `use_existing_ai_foundry_project=true` with `existing_ai_foundry_id` pointing to the Cognitive Services account you want to reuse, provide an existing Key Vault secret ID through `azure_openai_api_key_secret_id`, or supply the key directly via `azure_openai_api_key` in your `terraform.tfvars`. Terraform now validates this requirement and will stop with a helpful error if the key is missing when the demo app is enabled.
 
 Recommended workflow:
 - Update `infrastructure/terraform.tfvars` with the correct subscription IDs, resource IDs, and Azure OpenAI configuration (either deploy a new AI Foundry instance or reuse an existing account as noted above).

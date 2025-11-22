@@ -112,5 +112,5 @@ az role assignment create \
 ## Troubleshooting Tips
 - Re-run `terraform init` if you switch Azure subscriptions or upgrade providers.
 - If planning fails due to authentication, confirm the Azure CLI context or service principal variables.
-- When using an existing Log Analytics workspace in a different subscription, ensure your account has Reader access to that subscription and the `log_analytics_subscription_id` is populated.
+- When using an existing Log Analytics workspace in a different subscription, ensure your account has Reader access to that subscription and the `existing_log_analytics_subscription_id` is populated.
 - For private networking errors, verify that the selected regions support Container Apps with internal environments and private endpoints.
