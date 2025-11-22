@@ -78,9 +78,9 @@ medical-context-retrieval/
 
 ## 🛠️ Technology Stack
 
-- **Embeddings**: Azure OpenAI (text-embedding-ada-002)
+- **Embeddings**: Azure OpenAI (`text-embedding-3-large`)
 - **Vector Search**: FAISS (Facebook AI Similarity Search)
-- **NLP**: OpenAI GPT models for header generation
+- **NLP**: Azure OpenAI (`gpt-5-mini`) for contextual header generation and answer synthesis
 - **Frontend**: Jupyter + Voilà + ipywidgets
 - **Data Sources**: Web scraping (BeautifulSoup, requests)
 
