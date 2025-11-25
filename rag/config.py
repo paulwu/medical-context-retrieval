@@ -55,11 +55,21 @@ AZURE_OPENAI_API_KEY = _get("AZURE_OPENAI_API_KEY", required=True)
 AOAI_EMBED_MODEL = _get("AOAI_EMBED_MODEL", required=True)
 AOAI_CHAT_MODEL = _get("AOAI_CHAT_MODEL", required=True)
 
-# Cosmos (optional if not used in refactored subset yet)
+# Azure AI Search (for vector search - replaces FAISS)
+AZURE_SEARCH_ENDPOINT = _get("AZURE_SEARCH_ENDPOINT")  # e.g. https://medctx-demo-search.search.windows.net
+AZURE_SEARCH_KEY = _get("AZURE_SEARCH_KEY")
+AZURE_SEARCH_INDEX_NAME = _get("AZURE_SEARCH_INDEX_NAME", default="medical-context-index")
+
+# Azure Cosmos DB (for document/chunk storage - replaces local JSON)
 COSMOS_ENDPOINT = _get("COSMOS_ENDPOINT")
 COSMOS_KEY = _get("COSMOS_KEY")
-COSMOS_DB_NAME = _get("COSMOS_DB_NAME")
-COSMOS_CONTAINER = _get("COSMOS_CONTAINER")
+COSMOS_DB_NAME = _get("COSMOS_DB_NAME", default="medical-context-db")
+COSMOS_CONTAINER_DOCUMENTS = _get("COSMOS_CONTAINER_DOCUMENTS", default="documents")
+COSMOS_CONTAINER_CHUNKS = _get("COSMOS_CONTAINER_CHUNKS", default="chunks")
+
+# Storage mode: 'local' (FAISS + JSON) or 'azure' (Azure Search + Cosmos DB)
+# This allows incremental migration and fallback
+STORAGE_MODE = _get("STORAGE_MODE", default="local")
 
 # Chunk / header constants (centralized)
 SEMANTIC_MAX_WORDS = int(os.getenv("SEMANTIC_MAX_WORDS", 300))
@@ -92,10 +102,15 @@ __all__ = [
     "AZURE_OPENAI_API_KEY",
     "AOAI_EMBED_MODEL",
     "AOAI_CHAT_MODEL",
+    "AZURE_SEARCH_ENDPOINT",
+    "AZURE_SEARCH_KEY",
+    "AZURE_SEARCH_INDEX_NAME",
     "COSMOS_ENDPOINT",
     "COSMOS_KEY",
     "COSMOS_DB_NAME",
-    "COSMOS_CONTAINER",
+    "COSMOS_CONTAINER_DOCUMENTS",
+    "COSMOS_CONTAINER_CHUNKS",
+    "STORAGE_MODE",
     "SEMANTIC_MAX_WORDS",
     "HEADER_MAX_CHARS",
     "REQUESTS_PER_MIN",

@@ -5,6 +5,7 @@ scikit-learn
 faiss-cpu
 azure-cosmos
 azure-identity
+azure-search-documents
 openai
 python-dotenv
 aiohttp
