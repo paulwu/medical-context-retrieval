@@ -1,6 +1,24 @@
-# Quick Start Guide
+# Quick Start Guide for localy hosted Notebook
 
-## 🚀 Launch Demo in 3 Steps
+## � Prerequisites
+
+### Configure Environment Variables
+```bash
+# Copy the sample environment file
+cp .env.example .env
+
+# Edit .env with your Azure OpenAI credentials
+# - AZURE_OPENAI_ENDPOINT (Required: your Azure OpenAI service URL)
+# - AZURE_OPENAI_API_KEY (Required: your API key)
+# - AOAI_EMBED_MODEL (if you want to change your embedding model deployment name)
+# - AOAI_CHAT_MODEL (if you want to change your chat model deployment name)
+```
+
+**📝 Get Azure OpenAI credentials**: See `.env.example` for detailed setup instructions.
+
+---
+
+## �🚀 Launch Demo in 3 Steps
 
 ### Step 1: Verify Setup
 ```bash

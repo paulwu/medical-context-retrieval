@@ -1,4 +1,12 @@
 #!/bin/bash
+set -euo pipefail
+
+echo "deploy.sh is deprecated. Infrastructure is managed via Terraform in the infrastructure/ directory."
+echo "Use package.sh (or your packaging workflow) to build and push container images."
+exit 0
+
+: <<'LEGACY_DEPLOY_SCRIPT'
+#!/bin/bash
 set -e
 
 # Medical RAG System - Deployment Script
@@ -141,3 +149,4 @@ echo "  2. Configure custom domain in Azure Portal (if needed)"
 echo "  3. Set up Azure Front Door for global distribution (if needed)"
 echo "  4. Monitor logs: az containerapp logs show -n ${CONTAINER_APP_NAME} -g ${RESOURCE_GROUP}"
 echo ""
+LEGACY_DEPLOY_SCRIPT

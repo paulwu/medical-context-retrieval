@@ -10,11 +10,12 @@ echo ""
 # Check if .env exists
 if [ ! -f .env ]; then
     echo "❌ Error: .env file not found!"
-    echo "Please create a .env file with your Azure OpenAI credentials:"
+    echo "Please create your environment configuration:"
     echo ""
-    echo "AZURE_OPENAI_API_KEY=your_key_here"
-    echo "AZURE_OPENAI_ENDPOINT=your_endpoint_here"
-    echo "AZURE_OPENAI_DEPLOYMENT=your_deployment_name"
+    echo "  cp .env.example .env"
+    echo ""
+    echo "Then edit .env with your Azure OpenAI credentials."
+    echo "See .env.example for detailed setup instructions."
     echo ""
     exit 1
 fi

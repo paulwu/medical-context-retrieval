@@ -1,0 +1,2610 @@
+{
+  "GeneratedAt": "2025-11-10 06:16:23",
+  "Locations": [
+    "westus3",
+    "eastus2",
+    "swedencentral"
+  ],
+  "Models": [
+    "gpt-5-mini",
+    "text-embedding-3-large"
+  ],
+  "AvailableModels": [
+    {
+      "Region": "westus3",
+      "Name": "text-embedding-3-large",
+      "RAIPolicy": "N/A",
+      "MaxCapacity": 3,
+      "LifecycleStatus": "GenerallyAvailable",
+      "SKU": "Standard"
+    },
+    {
+      "Region": "westus3",
+      "Name": "gpt-5-mini",
+      "RAIPolicy": "N/A",
+      "MaxCapacity": 3,
+      "LifecycleStatus": "GenerallyAvailable",
+      "SKU": "DataZoneProvisionedManaged"
+    },
+    {
+      "Region": "eastus2",
+      "Name": "text-embedding-3-large",
+      "RAIPolicy": "N/A",
+      "MaxCapacity": 3,
+      "LifecycleStatus": "GenerallyAvailable",
+      "SKU": "Standard"
+    },
+    {
+      "Region": "eastus2",
+      "Name": "gpt-5-mini",
+      "RAIPolicy": "N/A",
+      "MaxCapacity": 3,
+      "LifecycleStatus": "GenerallyAvailable",
+      "SKU": "GlobalStandard"
+    },
+    {
+      "Region": "swedencentral",
+      "Name": "text-embedding-3-large",
+      "RAIPolicy": "N/A",
+      "MaxCapacity": 3,
+      "LifecycleStatus": "GenerallyAvailable",
+      "SKU": "Standard"
+    },
+    {
+      "Region": "swedencentral",
+      "Name": "gpt-5-mini",
+      "RAIPolicy": "N/A",
+      "MaxCapacity": 3,
+      "LifecycleStatus": "GenerallyAvailable",
+      "SKU": "GlobalStandard"
+    }
+  ],
+  "QuotaUsage": [
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.ProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.FineTuned.Deployments",
+      "Limit": "10",
+      "Current": "0",
+      "Available": "10"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.S0.AccountCount",
+      "Limit": "30",
+      "Current": "1",
+      "Available": "29"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.tts",
+      "Limit": "3",
+      "Current": "0",
+      "Available": "3"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.tts-hd",
+      "Limit": "3",
+      "Current": "0",
+      "Available": "3"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.gpt-35-turbo",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-35-turbo",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.gpt-4-turbo",
+      "Limit": "80",
+      "Current": "0",
+      "Available": "80"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-4-turbo-2024-0409",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4-turbo",
+      "Limit": "80000",
+      "Current": "0",
+      "Available": "80000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4o",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4o-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Provisioned.gpt-4o-audio-preview",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.gpt-4o",
+      "Limit": "150",
+      "Current": "0",
+      "Available": "150"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.gpt-4o-mini",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-4o",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini",
+      "Limit": "2000",
+      "Current": "250",
+      "Available": "1750"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.gpt-4o",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.gpt-4o-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.gpt-4o",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.gpt-4o-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.text-embedding-ada-002",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.text-embedding-ada-002",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.text-embedding-3-large",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.text-embedding-3-small",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.text-embedding-3-large",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.Standard.o1",
+      "Limit": "50",
+      "Current": "0",
+      "Available": "50"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.o1",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.o1-mini",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.o1",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.o3-mini",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.o3",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.o3",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.o3",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.o3-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.o3-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.o3",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.o3-mini",
+      "Limit": "200",
+      "Current": "0",
+      "Available": "200"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.o4-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.o4-mini",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.o4-mini",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.o4-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt4.1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-mini",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1-mini",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-nano",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1-nano",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1-nano",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1-nano",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-image-1",
+      "Limit": "3",
+      "Current": "3",
+      "Available": "0"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalStandard.gpt-image-1-mini",
+      "Limit": "4",
+      "Current": "0",
+      "Available": "4"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.GlobalBatch.gpt-5",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "OpenAI.DataZoneBatch.gpt-5",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.S0.AccountCount",
+      "Limit": "100",
+      "Current": "2",
+      "Available": "98"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.MaaS",
+      "Limit": "600",
+      "Current": "0",
+      "Available": "600"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.DeepSeek-R1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.DeepSeek-R1-0528",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.DeepSeek-V3-0324",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.DeepSeek-V3.1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.Llama-4-Maverick-17B-128E-Instruct-FP8",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.Llama-3.3-70B-Instruct",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.Cohere-Command-A",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.Embed-V-4-0",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.gpt-oss-120b",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.MAI-DS-R1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.FLUX-1.1-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.FLUX-1.1-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.FLUX.1-Kontext-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.FLUX.1-Kontext-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.mistral-document-ai-2505",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.mistral-document-ai-2505",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.grok-3",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.grok-3-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.grok-3",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.grok-3-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.grok-4-fast-reasoning",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.GlobalStandard.grok-4-fast-non-reasoning",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.grok-4-fast-reasoning",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AIServices.DataZoneStandard.grok-4-fast-non-reasoning",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "westus3",
+      "Name": "AccountCount",
+      "Limit": "200",
+      "Current": "4",
+      "Available": "196"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.ProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.FineTuned.Deployments",
+      "Limit": "10",
+      "Current": "0",
+      "Available": "10"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.S0.AccountCount",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.whisper",
+      "Limit": "3",
+      "Current": "0",
+      "Available": "3"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-35-turbo",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-35-turbo-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-35-turbo-1106-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-35-turbo-0125-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-35-turbo",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-4",
+      "Limit": "40",
+      "Current": "0",
+      "Available": "40"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-4-turbo",
+      "Limit": "80",
+      "Current": "0",
+      "Available": "80"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4-turbo-2024-0409",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-4o-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4-turbo",
+      "Limit": "80000",
+      "Current": "0",
+      "Available": "80000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4o",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4o-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Provisioned.gpt-4o-audio-preview",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-4o",
+      "Limit": "150",
+      "Current": "0",
+      "Available": "150"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.gpt-4o-mini",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o",
+      "Limit": "450",
+      "Current": "250",
+      "Available": "200"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini",
+      "Limit": "2000",
+      "Current": "250",
+      "Available": "1750"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-realtime-preview",
+      "Limit": "6",
+      "Current": "6",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-realtime-preview",
+      "Limit": "6",
+      "Current": "6",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-audio-preview",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-audio-preview",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt-4o",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt-4o-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.gpt-4o",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.gpt-4o-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-transcribe",
+      "Limit": "400",
+      "Current": "0",
+      "Available": "400"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-transcribe",
+      "Limit": "600",
+      "Current": "0",
+      "Available": "600"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-tts",
+      "Limit": "600",
+      "Current": "0",
+      "Available": "600"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.text-embedding-ada-002",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.text-embedding-ada-002",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.text-embedding-3-small",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.text-embedding-3-large",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.text-embedding-3-small",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.text-embedding-3-large",
+      "Limit": "1000",
+      "Current": "150",
+      "Available": "850"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.o1",
+      "Limit": "50",
+      "Current": "0",
+      "Available": "50"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o1",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o1-mini",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.o1",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o3-mini",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o3",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.o3",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.o3",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.o3-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o3-pro",
+      "Limit": "160",
+      "Current": "0",
+      "Available": "160"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.o3-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.o3",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.o3-mini",
+      "Limit": "200",
+      "Current": "0",
+      "Available": "200"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.ModelRouter",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.ModelRouter",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.codex-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.sora",
+      "Limit": "60",
+      "Current": "60",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.sora",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.sora-2",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o4-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.o4-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.Standard.o4-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.o4-mini",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.o4-mini",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.o4-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt4.1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-mini",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1-mini",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-nano",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1-nano",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1-nano",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1-nano",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-image-1",
+      "Limit": "3",
+      "Current": "3",
+      "Available": "0"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-image-1-mini",
+      "Limit": "4",
+      "Current": "0",
+      "Available": "4"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-5",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-5-chat",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-5-mini",
+      "Limit": "1000",
+      "Current": "150",
+      "Available": "850"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-5-nano",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt-5",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt-5-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneStandard.gpt-5-nano",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-5-pro",
+      "Limit": "160",
+      "Current": "0",
+      "Available": "160"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalBatch.gpt-5",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.DataZoneBatch.gpt-5",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-audio",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-realtime",
+      "Limit": "10",
+      "Current": "0",
+      "Available": "10"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-5-codex",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-audio-mini",
+      "Limit": "20",
+      "Current": "0",
+      "Available": "20"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-realtime-mini",
+      "Limit": "20",
+      "Current": "0",
+      "Available": "20"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-transcribe-diarize",
+      "Limit": "400",
+      "Current": "0",
+      "Available": "400"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.S0.AccountCount",
+      "Limit": "100",
+      "Current": "2",
+      "Available": "98"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.MaaS",
+      "Limit": "600",
+      "Current": "0",
+      "Available": "600"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.DeepSeek-R1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.DeepSeek-R1-0528",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.DeepSeek-V3-0324",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.DeepSeek-V3.1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.Llama-4-Maverick-17B-128E-Instruct-FP8",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.Llama-3.3-70B-Instruct",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.Cohere-Command-A",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.Embed-V-4-0",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.gpt-oss-120b",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.MAI-DS-R1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.FLUX-1.1-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.FLUX-1.1-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.FLUX.1-Kontext-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.FLUX.1-Kontext-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.mistral-document-ai-2505",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.mistral-document-ai-2505",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.grok-3",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.grok-3-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.grok-3",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.grok-3-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.grok-4-fast-reasoning",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.GlobalStandard.grok-4-fast-non-reasoning",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.grok-4-fast-reasoning",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AIServices.DataZoneStandard.grok-4-fast-non-reasoning",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "eastus2",
+      "Name": "AccountCount",
+      "Limit": "200",
+      "Current": "2",
+      "Available": "198"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.ProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.Dalle",
+      "Limit": "2",
+      "Current": "0",
+      "Available": "2"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.FineTuned.Deployments",
+      "Limit": "10",
+      "Current": "0",
+      "Available": "10"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.S0.AccountCount",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.whisper",
+      "Limit": "3",
+      "Current": "0",
+      "Available": "3"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.tts",
+      "Limit": "3",
+      "Current": "0",
+      "Available": "3"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.tts-hd",
+      "Limit": "3",
+      "Current": "0",
+      "Available": "3"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneProvisionedManaged",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4",
+      "Limit": "40",
+      "Current": "0",
+      "Available": "40"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4-turbo",
+      "Limit": "150",
+      "Current": "0",
+      "Available": "150"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4-turbo-2024-0409",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4-finetune",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4o-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4o-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4-32k",
+      "Limit": "80",
+      "Current": "0",
+      "Available": "80"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gptv",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4-turbo",
+      "Limit": "80000",
+      "Current": "0",
+      "Available": "80000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4o",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4o-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Provisioned.gpt-4o-audio-preview",
+      "Limit": "0",
+      "Current": "0",
+      "Available": "0"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4o",
+      "Limit": "150",
+      "Current": "0",
+      "Available": "150"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-4o-mini",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o",
+      "Limit": "450",
+      "Current": "0",
+      "Available": "450"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-realtime-preview",
+      "Limit": "6",
+      "Current": "0",
+      "Available": "6"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-realtime-preview",
+      "Limit": "6",
+      "Current": "0",
+      "Available": "6"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-audio-preview",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt-4o",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt-4o-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.gpt-4o",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.gpt-4o-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-transcribe",
+      "Limit": "400",
+      "Current": "0",
+      "Available": "400"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-mini-transcribe",
+      "Limit": "600",
+      "Current": "0",
+      "Available": "600"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-35-turbo",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-35-turbo-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-35-turbo-instruct",
+      "Limit": "240",
+      "Current": "0",
+      "Available": "240"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-35-turbo-1106-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt-35-turbo-0125-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-35-turbo",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.babbage-002",
+      "Limit": "240",
+      "Current": "0",
+      "Available": "240"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.babbage-002-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.davinci-002",
+      "Limit": "240",
+      "Current": "0",
+      "Available": "240"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.davinci-002-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.text-embedding-ada-002",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.text-embedding-ada-002",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.text-embedding-3-large",
+      "Limit": "350",
+      "Current": "0",
+      "Available": "350"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.text-embedding-3-small",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.text-embedding-3-large",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.o1",
+      "Limit": "50",
+      "Current": "0",
+      "Available": "50"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o1",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o1-mini",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.o1",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o3-mini",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o3",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.o3",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.o3",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.o3-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o3-pro",
+      "Limit": "160",
+      "Current": "0",
+      "Available": "160"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.o3",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.o3-mini",
+      "Limit": "200",
+      "Current": "0",
+      "Available": "200"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.ModelRouter",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.ModelRouter",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.codex-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.sora",
+      "Limit": "60",
+      "Current": "60",
+      "Available": "0"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.sora-2",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o4-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.o4-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.o4-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.o4-mini",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.o4-mini",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.o4-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt4.1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-finetune",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-mini-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.Standard.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DeveloperTier.gpt4.1-nano-finetune",
+      "Limit": "500",
+      "Current": "0",
+      "Available": "500"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-mini",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1-mini",
+      "Limit": "1000000",
+      "Current": "0",
+      "Available": "1000000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1-mini",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt4.1-nano",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt4.1-nano",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-4.1-nano",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1-mini",
+      "Limit": "100000",
+      "Current": "0",
+      "Available": "100000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneBatch.gpt-4.1-nano",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-image-1",
+      "Limit": "3",
+      "Current": "3",
+      "Available": "0"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-image-1-mini",
+      "Limit": "4",
+      "Current": "0",
+      "Available": "4"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-5",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-5-chat",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-5-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-5-nano",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt-5",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt-5-mini",
+      "Limit": "300",
+      "Current": "0",
+      "Available": "300"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.DataZoneStandard.gpt-5-nano",
+      "Limit": "2000",
+      "Current": "0",
+      "Available": "2000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-5-pro",
+      "Limit": "160",
+      "Current": "0",
+      "Available": "160"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalBatch.gpt-5",
+      "Limit": "200000",
+      "Current": "0",
+      "Available": "200000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-audio",
+      "Limit": "30000",
+      "Current": "0",
+      "Available": "30000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-realtime",
+      "Limit": "10",
+      "Current": "0",
+      "Available": "10"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-5-codex",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-audio-mini",
+      "Limit": "20",
+      "Current": "0",
+      "Available": "20"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-realtime-mini",
+      "Limit": "20",
+      "Current": "0",
+      "Available": "20"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "OpenAI.GlobalStandard.gpt-4o-transcribe-diarize",
+      "Limit": "400",
+      "Current": "0",
+      "Available": "400"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.S0.AccountCount",
+      "Limit": "100",
+      "Current": "1",
+      "Available": "99"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.MaaS",
+      "Limit": "600",
+      "Current": "0",
+      "Available": "600"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.DeepSeek-R1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.DeepSeek-R1-0528",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.DeepSeek-V3-0324",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.DeepSeek-V3.1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.Llama-4-Maverick-17B-128E-Instruct-FP8",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.Llama-3.3-70B-Instruct",
+      "Limit": "250",
+      "Current": "0",
+      "Available": "250"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.Cohere-Command-A",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.Embed-V-4-0",
+      "Limit": "100",
+      "Current": "0",
+      "Available": "100"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.gpt-oss-120b",
+      "Limit": "5000",
+      "Current": "0",
+      "Available": "5000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.MAI-DS-R1",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.FLUX-1.1-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.DataZoneStandard.FLUX-1.1-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.FLUX.1-Kontext-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.DataZoneStandard.FLUX.1-Kontext-pro",
+      "Limit": "30",
+      "Current": "0",
+      "Available": "30"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.mistral-document-ai-2505",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.DataZoneStandard.mistral-document-ai-2505",
+      "Limit": "60",
+      "Current": "0",
+      "Available": "60"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.grok-3",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.grok-3-mini",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.grok-4-fast-reasoning",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AIServices.GlobalStandard.grok-4-fast-non-reasoning",
+      "Limit": "1000",
+      "Current": "0",
+      "Available": "1000"
+    },
+    {
+      "Location": "swedencentral",
+      "Name": "AccountCount",
+      "Limit": "200",
+      "Current": "1",
+      "Available": "199"
+    }
+  ],
+  "Summary": {
+    "TotalModelsFound": 6,
+    "TotalQuotaEntries": 363,
+    "LocationsProcessed": 3
+  }
+}

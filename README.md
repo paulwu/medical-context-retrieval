@@ -2,7 +2,7 @@
 
 An AI-powered Retrieval-Augmented Generation (RAG) system for medical guideline search, featuring contextual header enhancement for improved retrieval accuracy.
 
-## 🚀 Quick Demo
+## 🚀 Quick Local Demo
 
 Run the interactive demo with Voilà:
 ```bash
@@ -78,9 +78,9 @@ medical-context-retrieval/
 
 ## 🛠️ Technology Stack
 
-- **Embeddings**: Azure OpenAI (text-embedding-ada-002)
+- **Embeddings**: Azure OpenAI (`text-embedding-3-large`)
 - **Vector Search**: FAISS (Facebook AI Similarity Search)
-- **NLP**: OpenAI GPT models for header generation
+- **NLP**: Azure OpenAI (`gpt-5-mini`) for contextual header generation and answer synthesis
 - **Frontend**: Jupyter + Voilà + ipywidgets
 - **Data Sources**: Web scraping (BeautifulSoup, requests)
 
@@ -93,11 +93,13 @@ medical-context-retrieval/
    pip install -r requirements.txt
    ```
 
-2. **Ensure your `.env` file contains Azure OpenAI credentials:**
-   ```
-   AZURE_OPENAI_API_KEY=your_key_here
-   AZURE_OPENAI_ENDPOINT=your_endpoint_here
-   AZURE_OPENAI_DEPLOYMENT=your_deployment_name
+2. **Configure your environment variables:**
+   ```bash
+   # Copy the sample environment file
+   cp .env.example .env
+   
+   # Edit .env with your actual Azure OpenAI credentials
+   # See .env.example for detailed instructions and all available settings
    ```
 
 3. **Launch the demo:**
