@@ -69,6 +69,21 @@ medical-context-retrieval/
 - Comprehensive evaluation framework
 - A/B testing capabilities (baseline vs. enhanced)
 
+### 5. **Hybrid Architecture: Local & Azure Modes**
+- **Local Mode** (Default): FAISS + JSON files for learning and development
+  - Perfect for understanding how RAG systems work
+  - Run everything on your machine
+  - Full transparency into embeddings and indexing
+  - Ideal for education and experimentation
+
+- **Azure Mode**: Cloud-scale production deployment
+  - Azure AI Search for vector similarity search (HNSW algorithm)
+  - Azure Cosmos DB for document/chunk storage
+  - Scalable, production-ready infrastructure
+  - Same code, different backend - just change `STORAGE_MODE` in `.env`
+
+**The system automatically detects your storage mode and adapts!** This preserves the educational value while offering a production-ready path.
+
 ## 🏥 Use Cases
 
 - **Healthcare Organizations**: Build domain-specific AI systems with better accuracy than commercial alternatives
@@ -79,10 +94,69 @@ medical-context-retrieval/
 ## 🛠️ Technology Stack
 
 - **Embeddings**: Azure OpenAI (`text-embedding-3-large`)
-- **Vector Search**: FAISS (Facebook AI Similarity Search)
+- **Vector Search**:
+  - Local Mode: FAISS (Facebook AI Similarity Search)
+  - Azure Mode: Azure AI Search with HNSW algorithm
+- **Storage**:
+  - Local Mode: JSON files + local cache
+  - Azure Mode: Azure Cosmos DB (NoSQL)
 - **NLP**: Azure OpenAI (`gpt-5-mini`) for contextual header generation and answer synthesis
 - **Frontend**: Jupyter + Voilà + ipywidgets
 - **Data Sources**: Web scraping (BeautifulSoup, requests)
+
+## 🔄 Switching Between Local and Azure Modes
+
+The system supports **two deployment modes** that share the same codebase:
+
+### Local Mode (Default - Educational)
+Perfect for learning how RAG systems work from the ground up.
+
+**Setup:**
+1. Set in `.env`: `STORAGE_MODE=local`
+2. Run `main.ipynb` to build the FAISS index locally
+3. Data stored in: `cache/` directory as JSON files
+
+**Use when:**
+- Learning about embeddings, chunking, and vector search
+- Developing and testing new features
+- Working offline or without Azure resources
+- Teaching RAG concepts to others
+
+### Azure Mode (Production)
+Cloud-scale deployment using Azure services.
+
+**Setup:**
+1. Set in `.env`: `STORAGE_MODE=azure`
+2. Configure Azure credentials in `.env`:
+   - `AZURE_SEARCH_ENDPOINT` and `AZURE_SEARCH_KEY`
+   - `COSMOS_ENDPOINT` and `COSMOS_KEY`
+3. Run `populate_azure_search.py` to upload chunks and embeddings
+4. Data stored in: Azure Cosmos DB + Azure AI Search
+
+**Use when:**
+- Deploying to production
+- Need scalability and high availability
+- Want managed infrastructure
+- Building multi-user applications
+
+### How the Code Adapts
+
+The `EmbeddingRetriever` class automatically detects your mode:
+
+```python
+from rag.retrieval import EmbeddingRetriever
+
+# Local mode
+retriever = EmbeddingRetriever(index, metadata, use_azure=False)
+
+# Azure mode
+retriever = EmbeddingRetriever(use_azure=True)
+
+# Auto-detect from config.STORAGE_MODE
+retriever = EmbeddingRetriever()  # Reads from .env
+```
+
+**All notebooks work in both modes!** Just change `STORAGE_MODE` and restart.
 
 ## 📖 Usage
 

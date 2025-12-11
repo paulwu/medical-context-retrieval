@@ -122,8 +122,11 @@ class EmbeddingRetriever:
 
     def _search_azure(self, query: str, top_k: int) -> List[Dict[str, Any]]:
         """Search using Azure AI Search (cloud mode)."""
-        # Use text search which lets Azure auto-vectorize the query
-        results = azure_search.search_text(query, top_k=top_k)
+        # Generate query embedding
+        vec = self.embed_query(query)
+
+        # Use pre-computed embeddings for search
+        results = azure_search.search(vec, top_k=top_k)
 
         # Convert to the expected format
         out: List[Dict[str, Any]] = []
