@@ -19,12 +19,14 @@ from azure.search.documents.indexes.models import (
     SearchFieldDataType,
     VectorSearch,
     HnswAlgorithmConfiguration,
+    HnswParameters,
     VectorSearchProfile,
     SemanticConfiguration,
     SemanticPrioritizedFields,
     SemanticField,
     SemanticSearch,
 )
+from azure.search.documents.models import VectorizedQuery, VectorizableTextQuery
 
 from . import config
 from .models import Chunk, RetrievalResult
@@ -61,12 +63,28 @@ def _get_index_client() -> SearchIndexClient:
     )
 
 
-def create_search_index(embedding_dimensions: int = 3072) -> None:
+def create_search_index(embedding_dimensions: int = 3072, force_recreate: bool = False) -> None:
     """Create or update Azure AI Search index with vector search capabilities.
 
     Args:
         embedding_dimensions: Dimension of embedding vectors (default: 3072 for text-embedding-3-large)
+        force_recreate: If True, delete existing index before creating new one
     """
+    index_client = _get_index_client()
+
+    # Check if index exists
+    try:
+        existing_index = index_client.get_index(config.AZURE_SEARCH_INDEX_NAME)
+        if existing_index and not force_recreate:
+            logger.info(f"Index {config.AZURE_SEARCH_INDEX_NAME} already exists, skipping creation")
+            return
+        elif existing_index and force_recreate:
+            logger.info(f"Deleting existing index: {config.AZURE_SEARCH_INDEX_NAME}")
+            index_client.delete_index(config.AZURE_SEARCH_INDEX_NAME)
+    except Exception:
+        # Index doesn't exist, we'll create it
+        pass
+
     logger.info(f"Creating Azure AI Search index: {config.AZURE_SEARCH_INDEX_NAME}")
 
     # Define the fields for the index
@@ -148,12 +166,12 @@ def create_search_index(embedding_dimensions: int = 3072) -> None:
         algorithms=[
             HnswAlgorithmConfiguration(
                 name="medical-context-hnsw",
-                parameters={
-                    "m": 4,  # Number of bi-directional links (similar to FAISS IVF)
-                    "efConstruction": 400,  # Size of dynamic candidate list for construction
-                    "efSearch": 500,  # Size of dynamic candidate list for search
-                    "metric": "cosine",  # Use cosine similarity (similar to normalized L2)
-                }
+                parameters=HnswParameters(
+                    m=4,  # Number of bi-directional links (similar to FAISS IVF)
+                    ef_construction=400,  # Size of dynamic candidate list for construction
+                    ef_search=500,  # Size of dynamic candidate list for search
+                    metric="cosine",  # Use cosine similarity (similar to normalized L2)
+                )
             )
         ],
         profiles=[
@@ -187,7 +205,6 @@ def create_search_index(embedding_dimensions: int = 3072) -> None:
         semantic_search=semantic_search,
     )
 
-    index_client = _get_index_client()
     result = index_client.create_or_update_index(index)
     logger.info(f"Index created/updated: {result.name}")
 
@@ -268,15 +285,21 @@ def search(
     """
     search_client = _get_search_client()
 
+    # Ensure query_embedding is 1D
+    if query_embedding.ndim == 2:
+        query_embedding = query_embedding.flatten()
+
+    # Create vector query
+    vector_query = VectorizedQuery(
+        vector=query_embedding.tolist(),
+        k_nearest_neighbors=top_k,
+        fields="embedding"
+    )
+
     # Perform vector search
     results = search_client.search(
         search_text=None,  # Pure vector search (no keyword search)
-        vector_queries=[{
-            "kind": "vector",
-            "vector": query_embedding.tolist(),
-            "fields": "embedding",
-            "k": top_k,
-        }],
+        vector_queries=[vector_query],
         filter=filters,
         select=[
             "chunk_id", "doc_id", "doc_title", "raw_chunk",
@@ -337,10 +360,83 @@ def get_document_count() -> int:
     return results.get_count() or 0
 
 
+def search_text(
+    query_text: str,
+    top_k: int = 5,
+    filters: Optional[str] = None
+) -> List[RetrievalResult]:
+    """Perform vector similarity search using text query (auto-vectorized by Azure).
+
+    Args:
+        query_text: Query text to search for (will be automatically vectorized)
+        top_k: Number of top results to return
+        filters: OData filter expression (e.g., "source_org eq 'WHO'")
+
+    Returns:
+        List of RetrievalResult objects with similarity scores
+    """
+    search_client = _get_search_client()
+
+    # Create vectorizable text query (Azure will generate embedding)
+    vector_query = VectorizableTextQuery(
+        text=query_text,
+        k_nearest_neighbors=top_k,
+        fields="embedding"
+    )
+
+    # Perform vector search
+    results = search_client.search(
+        search_text=None,  # Pure vector search (no keyword search)
+        vector_queries=[vector_query],
+        filter=filters,
+        select=[
+            "chunk_id", "doc_id", "doc_title", "raw_chunk",
+            "ctx_header", "augmented_chunk", "section_path",
+            "source_org", "source_url", "pub_date", "chunk_index"
+        ],
+        top=top_k,
+    )
+
+    # Convert to RetrievalResult objects
+    retrieval_results = []
+    for rank, result in enumerate(results, start=1):
+        # Azure Search returns a similarity score
+        similarity = result.get("@search.score", 0.0)
+
+        metadata = {
+            "chunk_id": result.get("chunk_id", ""),
+            "doc_id": result.get("doc_id", ""),
+            "doc_title": result.get("doc_title", ""),
+            "raw_chunk": result.get("raw_chunk", ""),
+            "ctx_header": result.get("ctx_header", ""),
+            "augmented_chunk": result.get("augmented_chunk", ""),
+            "section_path": result.get("section_path", ""),
+            "source_org": result.get("source_org", ""),
+            "source_url": result.get("source_url", ""),
+            "pub_date": result.get("pub_date", ""),
+            "chunk_index": result.get("chunk_index", 0),
+        }
+
+        retrieval_results.append(
+            RetrievalResult(
+                rank=rank,
+                similarity=similarity,
+                chunk_id=int(result.get("chunk_id", "0").split("_")[-1])
+                if "_" in result.get("chunk_id", "")
+                else 0,
+                metadata=metadata,
+            )
+        )
+
+    logger.info(f"Found {len(retrieval_results)} results")
+    return retrieval_results
+
+
 __all__ = [
     "create_search_index",
     "upload_chunks",
     "search",
+    "search_text",
     "delete_index",
     "get_document_count",
 ]
