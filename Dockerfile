@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
 COPY rag/ ./rag/
 COPY cache/ ./cache/
 COPY voila_config/ ./voila_config/
+COPY jupyter_config/ ./jupyter_config/
 COPY demo.ipynb .
 
 # Create necessary directories
@@ -33,6 +34,7 @@ EXPOSE 8866
 ENV VOILA_PORT=8866
 ENV VOILA_IP=0.0.0.0
 ENV VOILA_CONFIG_PATH=/app/voila_config
+ENV JUPYTER_CONFIG_DIR=/app/jupyter_config
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \

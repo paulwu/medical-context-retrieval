@@ -39,11 +39,14 @@ echo ""
 echo -e "${YELLOW}Press Ctrl+C to stop the server${NC}"
 echo ""
 
+# Multi-user/"stateless" friendly kernel config (prevents IPython history sqlite locks)
+export JUPYTER_CONFIG_DIR="${JUPYTER_CONFIG_DIR:-$(pwd)/jupyter_config}"
+
 # Launch Voilà with admin notebook
 voila admin.ipynb \
     --port=${ADMIN_PORT} \
     --no-browser \
     --Voila.ip=0.0.0.0 \
-    --VoilaConfiguration.file_whitelist=['.*'] \
+    --VoilaConfiguration.file_allowlist=['.*'] \
     --VoilaConfiguration.show_tracebacks=True \
     --enable_nbextensions=True

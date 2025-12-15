@@ -51,10 +51,13 @@ echo "Press Ctrl+C to stop the server"
 echo ""
 echo "----------------------------------------"
 
+# Multi-user/"stateless" friendly kernel config (prevents IPython history sqlite locks)
+export JUPYTER_CONFIG_DIR="${JUPYTER_CONFIG_DIR:-$(pwd)/jupyter_config}"
+
 voila demo.ipynb \
     --port=8866 \
     --template=lab \
-    --VoilaConfiguration.file_whitelist="['.*']" \
+    --VoilaConfiguration.file_allowlist="['.*']" \
     --no-browser
 
 echo ""

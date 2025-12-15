@@ -1,12 +1,20 @@
 {
-  "theme": "light",
-  "template": "lab",
-  "show_tracebacks": false,
-  "enable_nbextensions": true,
   "VoilaConfiguration": {
+    "template": "lab",
+    "theme": "light",
     "show_tracebacks": false,
     "enable_nbextensions": true,
-    "file_whitelist": [".*"],
-    "theme": "light"
+
+    "file_allowlist": [".*"],
+
+    "preheat_kernel": false,
+    "default_pool_size": 0
+  },
+
+  "AsyncMappingKernelManager": {
+    "cull_interval": 60,
+    "cull_idle_timeout": 900,
+    "cull_busy": false,
+    "cull_connected": false
   }
 }
