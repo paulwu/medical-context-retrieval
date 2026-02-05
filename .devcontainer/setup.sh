@@ -31,4 +31,8 @@ fi
 echo "Creating cache directory..."
 mkdir -p cache
 
+# Configure git defaults
+echo "Configuring git defaults..."
+git config --global pull.rebase true
+
 echo "Setup complete."
