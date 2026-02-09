@@ -1,11 +1,16 @@
 ---
 description: 'Comprehensive technology stack blueprint generator that analyzes codebases to create detailed architectural documentation. Automatically detects technology stacks, programming languages, and implementation patterns across multiple platforms (.NET, Java, JavaScript, React, Python). Generates configurable blueprints with version information, licensing details, usage patterns, coding conventions, and visual diagrams. Provides implementation-ready templates and maintains architectural consistency for guided development.'
 agent: 'agent'
+name: 'Technology-Stack-Blueprint-Generator'
+argument-hint: 'OUTPUT_PATH=path'
+model: 'Claude Opus 4.6 (fast mode) (Preview)'
 ---
 
 # Comprehensive Technology Stack Blueprint Generator
 
 ## Configuration Variables
+${TARGET_PATH=""} <!-- Folder path to analyze (leave empty for current workspace) -->
+${OUTPUT_PATH=""} <!-- Folder path for output file (leave empty for current workspace) -->
 ${PROJECT_TYPE="Auto-detect|.NET|Java|JavaScript|React.js|React Native|Angular|Python|Other"} <!-- Primary technology -->
 ${DEPTH_LEVEL="Basic|Standard|Comprehensive|Implementation-Ready"} <!-- Analysis depth -->
 ${INCLUDE_VERSIONS=true|false} <!-- Include version information -->
@@ -18,7 +23,7 @@ ${CATEGORIZATION="Technology Type|Layer|Purpose"} <!-- Organization method -->
 
 ## Generated Prompt
 
-"Analyze the codebase and generate a ${DEPTH_LEVEL} technology stack blueprint that thoroughly documents technologies and implementation patterns to facilitate consistent code generation. Use the following approach:
+"Analyze ${TARGET_PATH ? "the codebase at path '" + TARGET_PATH + "'" : "the current workspace codebase"} and generate a ${DEPTH_LEVEL} technology stack blueprint that thoroughly documents technologies and implementation patterns to facilitate consistent code generation. Use the following approach:
 
 ### 1. Technology Identification Phase
 - ${PROJECT_TYPE == "Auto-detect" ? "Scan the codebase for project files, configuration files, and dependencies to determine all technology stacks in use" : "Focus on ${PROJECT_TYPE} technologies"}
@@ -238,5 +243,5 @@ ${INCLUDE_DIAGRAMS ?
 
 Format the output as ${OUTPUT_FORMAT} and categorize technologies by ${CATEGORIZATION}.
 
-Save the output as 'Technology_Stack_Blueprint.${OUTPUT_FORMAT == "Markdown" ? "md" : OUTPUT_FORMAT.toLowerCase()}'
+Save the output as '${OUTPUT_PATH ? OUTPUT_PATH + "/" : ""}Technology_Stack_Blueprint.${OUTPUT_FORMAT == "Markdown" ? "md" : OUTPUT_FORMAT.toLowerCase()}'
 "

@@ -1,8 +1,17 @@
 ---
 description: 'Comprehensive project architecture blueprint generator that analyzes codebases to create detailed architectural documentation. Automatically detects technology stacks and architectural patterns, generates visual diagrams, documents implementation patterns, and provides extensible blueprints for maintaining architectural consistency and guiding new development.'
 agent: 'agent'
+model: 'Claude Opus 4.6 (fast mode) (Preview)'
+argument-hint: '--detail-level=Comprehensive --output-folder=docs/architecture'
 ---
+<!--
+Usage Example:
+/architecture-blueprint-generator --detail-level=Comprehensive --output-folder=docs/architecture
 
+/architecture-blueprint-generator --project-type=Auto-detect --architecture-pattern=Auto-detect --diagram-type=C4 --detail-level=Comprehensive --includes-code-examples=true --includes-implementation-patterns=true --includes-decision-records=true --focus-on-extensibility=true --output-folder=docs/architecture
+
+
+-->
 # Comprehensive Project Architecture Blueprint Generator
 
 ## Configuration Variables
@@ -14,10 +23,19 @@ ${INCLUDES_CODE_EXAMPLES=true|false} <!-- Include sample code to illustrate patt
 ${INCLUDES_IMPLEMENTATION_PATTERNS=true|false} <!-- Include detailed implementation patterns -->
 ${INCLUDES_DECISION_RECORDS=true|false} <!-- Include architectural decision records -->
 ${FOCUS_ON_EXTENSIBILITY=true|false} <!-- Emphasize extension points and patterns -->
+${OUTPUT_FOLDER="."} <!-- Folder path for output file (defaults to repository root) -->
+
+## Inputs
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `OUTPUT_FOLDER` | Folder path where output file will be written | `.` (repository root) |
+
+If `OUTPUT_FOLDER` is provided, create the directory if it doesn't exist before writing the file.
 
 ## Generated Prompt
 
-"Create a comprehensive 'Project_Architecture_Blueprint.md' document that thoroughly analyzes the architectural patterns in the codebase to serve as a definitive reference for maintaining architectural consistency. Use the following approach:
+"Create a comprehensive 'Project_Architecture_Blueprint.md' document in the specified output folder (${OUTPUT_FOLDER}) that thoroughly analyzes the architectural patterns in the codebase to serve as a definitive reference for maintaining architectural consistency. If the output folder does not exist, create it first. Use the following approach:
 
 ### 1. Architecture Detection and Analysis
 - ${PROJECT_TYPE == "Auto-detect" ? "Analyze the project structure to identify all technology stacks and frameworks in use by examining:

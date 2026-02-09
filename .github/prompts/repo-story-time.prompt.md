@@ -1,9 +1,19 @@
 ---
 agent: 'agent'
+name: 'Repository Story Time'
 description: 'Generate a comprehensive repository summary and narrative story from commit history'
-tools: ['changes', 'search/codebase', 'edit/editFiles', 'githubRepo', 'runCommands', 'runTasks', 'search', 'search/searchResults', 'runCommands/terminalLastCommand', 'runCommands/terminalSelection']
+tools: ['search/changes', 'search/codebase', 'edit/editFiles', 'web/githubRepo', 'execute/getTerminalOutput', 'execute/runInTerminal', 'read/terminalLastCommand', 'read/terminalSelection', 'execute/createAndRunTask', 'search', 'search/searchResults', 'read/terminalLastCommand', 'read/terminalSelection']
+argument-hint: '--outputFolder ./docs  #defaults to repository root if not provided'
 ---
 
+
+## Inputs
+
+| Parameter | Description | Default |
+|-----------|-------------|--------|
+| `outputFolder` | Folder path where output files will be written | `.` (repository root) |
+
+If `outputFolder` is provided, create the directory if it doesn't exist before writing files.
 
 ## Role
 
@@ -16,7 +26,7 @@ Transform any repository into a comprehensive analysis with two deliverables:
 1. **REPOSITORY_SUMMARY.md** - Technical architecture and purpose overview
 2. **THE_STORY_OF_THIS_REPO.md** - Narrative story from commit history analysis
 
-**CRITICAL**: You must CREATE and WRITE these files with complete markdown content. Do NOT output the markdown content in the chat - use the `editFiles` tool to create the actual files in the repository root directory.
+**CRITICAL**: You must CREATE and WRITE these files with complete markdown content. Do NOT output the markdown content in the chat - use the `editFiles` tool to create the actual files in the specified `outputFolder` (defaults to repository root if not provided).
 
 ## Methodology
 
@@ -141,7 +151,7 @@ Where the repository stands today and future implications.
 
 ## Success Criteria
 
-- Both markdown files are **ACTUALLY CREATED** with complete, comprehensive content using the `editFiles` tool
+- Both markdown files are **ACTUALLY CREATED** in the specified `outputFolder` with complete, comprehensive content using the `editFiles` tool
 - **NO markdown content should be output to chat** - all content must be written directly to the files
 - Technical summary accurately represents repository architecture
 - Narrative story reveals human patterns and interesting insights
