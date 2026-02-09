@@ -1,6 +1,6 @@
 ---
 agent: 'agent'
-name: 'Repository Story Time'
+name: 'Repository-Story-Time'
 description: 'Generate a comprehensive repository summary and narrative story from commit history'
 tools: ['search/changes', 'search/codebase', 'edit/editFiles', 'web/githubRepo', 'execute/getTerminalOutput', 'execute/runInTerminal', 'read/terminalLastCommand', 'read/terminalSelection', 'execute/createAndRunTask', 'search', 'search/searchResults', 'read/terminalLastCommand', 'read/terminalSelection']
 argument-hint: '--outputFolder ./docs  #defaults to repository root if not provided'
