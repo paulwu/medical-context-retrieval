@@ -100,6 +100,12 @@ variable "existing_ai_foundry_subscription_id" {
   default     = ""
 }
 
+variable "existing_ai_foundry_local_auth_disabled" {
+  description = "Whether the existing AI Foundry account has local (key-based) authentication disabled. When true, listKeys calls are skipped and RBAC/Managed Identity is used instead."
+  type        = bool
+  default     = false
+}
+
 variable "azure_openai_api_key" {
   description = "Optional Azure OpenAI API key to use when AI Foundry instances are not deployed."
   type        = string

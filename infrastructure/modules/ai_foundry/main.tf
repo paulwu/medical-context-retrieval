@@ -41,7 +41,7 @@ resource "azapi_resource" "ai_foundry_account" {
     sku  = { name = "S0" }
     identity = { type = "SystemAssigned" }
     properties = {
-      disableLocalAuth      = false
+      disableLocalAuth      = var.disable_local_auth
       allowProjectManagement = true
       customSubDomainName   = lower(var.cognitive_name)
       publicNetworkAccess   = var.public_network_access_enabled ? "Enabled" : "Disabled"

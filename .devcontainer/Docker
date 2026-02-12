@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/devcontainers/python:1-3.11-bookworm
+
+# Remove any stale Yarn apt repository / GPG key left in the base image.
+# The keyring filename varies across image versions, so use a glob.
+RUN rm -f /etc/apt/sources.list.d/yarn.list 2>/dev/null || true

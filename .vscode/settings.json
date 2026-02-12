@@ -23,4 +23,27 @@
         "examples/": true,
         ".venv/": true
     }
+    // "chat.tools.terminal.autoApprove": {
+    //     "terraform": true
+    // }
+    // MCP Server Configuration
+    // Microsoft Learn Docs MCP Server - Official Microsoft documentation access
+    // Install: npx -y @microsoftdocs/mcp
+    // GitHub: https://github.com/microsoftdocs/mcp
+    //
+    // Azure MCP Server - Azure services integration (Storage, Cosmos DB, Azure CLI)
+    // Install: npx -y @azure/mcp
+    // GitHub: https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server
+    // "mcp": {
+    //     "servers": {
+    //         "microsoft-learn-docs": {
+    //             "command": "npx",
+    //             "args": ["-y", "@anthropic-ai/mcp-server-fetch"]
+    //         }
+    //     }
+    // },
+    // "chat.tools.terminal.autoApprove": {
+    //     "docker container": true,
+    //     "docker image": true
+    // }
 }

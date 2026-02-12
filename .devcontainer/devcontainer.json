@@ -2,10 +2,8 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
 	"name": "Medical Context Retrieval",
-	// Use Dockerfile to fix Yarn GPG key issue before installing features
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
+	// Use Dockerfile to remove stale Yarn APT source before features install
+	"build": { "dockerfile": "Dockerfile" },
 	"features": {
 		"ghcr.io/devcontainers/features/azure-cli:1": {
 			"version": "latest",

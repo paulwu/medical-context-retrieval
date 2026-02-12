@@ -541,7 +541,7 @@ data "azapi_resource" "existing_ai_foundry_account_subscription" {
 }
 
 data "azapi_resource_action" "existing_ai_foundry_account_keys_default" {
-  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id == "" ? 1 : 0
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id == "" && !var.existing_ai_foundry_local_auth_disabled ? 1 : 0
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
   resource_id            = var.existing_ai_foundry_id
   action                 = "listKeys"
@@ -551,7 +551,7 @@ data "azapi_resource_action" "existing_ai_foundry_account_keys_default" {
 }
 
 data "azapi_resource_action" "existing_ai_foundry_account_keys_subscription" {
-  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id != "" ? 1 : 0
+  count                  = var.use_existing_ai_foundry_project && var.existing_ai_foundry_subscription_id != "" && !var.existing_ai_foundry_local_auth_disabled ? 1 : 0
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
   resource_id            = var.existing_ai_foundry_id
   action                 = "listKeys"
@@ -562,7 +562,8 @@ data "azapi_resource_action" "existing_ai_foundry_account_keys_subscription" {
 
 # Store Azure OpenAI key in Key Vault for container app consumption
 resource "azurerm_key_vault_secret" "azure_openai_api_key" {
-  count        = var.deploy_infrastructure && ((var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances) || var.use_existing_ai_foundry_project) ? 1 : 0
+  # Skip when using existing AI Foundry with local auth disabled (no key available) and no inline key
+  count        = var.deploy_infrastructure && ((var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances && !var.existing_ai_foundry_local_auth_disabled) || (var.use_existing_ai_foundry_project && !var.existing_ai_foundry_local_auth_disabled)) ? 1 : 0
   name         = "azure-openai-api-key"
   value        = var.use_existing_ai_foundry_project ? local.existing_ai_foundry_account_key : module.aifoundry_1[0].ai_foundry_account_key
   key_vault_id = module.key_vault[0].key_vault_id
@@ -586,7 +587,7 @@ locals {
     try(data.azapi_resource.existing_ai_foundry_account_subscription[0].output.properties.endpoint, null),
     null
   )
-  existing_ai_foundry_account_key = coalesce(
+  existing_ai_foundry_account_key = var.existing_ai_foundry_local_auth_disabled ? null : coalesce(
     try(data.azapi_resource_action.existing_ai_foundry_account_keys_default[0].output.key1, null),
     try(data.azapi_resource_action.existing_ai_foundry_account_keys_subscription[0].output.key1, null),
     null
@@ -645,8 +646,8 @@ locals {
 
 check "azure_openai_key_supplied" {
   assert {
-    condition     = !(local.container_app_requires_openai_key && !local.azure_openai_secret_available)
-    error_message = "Azure OpenAI API key must be supplied via AI Foundry deployment, azure_openai_api_key_secret_id, or azure_openai_api_key when deploying the demo container app."
+    condition     = !(local.container_app_requires_openai_key && !local.azure_openai_secret_available) || var.existing_ai_foundry_local_auth_disabled
+    error_message = "Azure OpenAI API key must be supplied via AI Foundry deployment, azure_openai_api_key_secret_id, or azure_openai_api_key when deploying the demo container app. When local auth is disabled on the AI Foundry account, use Managed Identity (RBAC) authentication instead."
   }
 }
 
@@ -662,6 +663,7 @@ module "aifoundry_1" {
   assign_current_user_admin     = true
   current_user_object_id        = data.azurerm_client_config.current.object_id
   public_network_access_enabled = var.deploy_private_network ? false : true
+  disable_local_auth            = true
   create_deployments            = var.deploy_ai_model_deployments
   create_ai_foundry_project     = true # Now enabled - creates proper Cognitive Services project
   tags = merge(local.common_tags, {

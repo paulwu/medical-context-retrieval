@@ -47,6 +47,12 @@ variable "project_description" {
   default     = ""
 }
 
+variable "disable_local_auth" {
+  description = "Whether to disable local (key-based) authentication. Set to true when Azure Policy requires Entra ID-only auth."
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "Tags to apply to the Key Vault"
   type        = map(string)

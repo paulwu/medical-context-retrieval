@@ -1,15 +1,16 @@
-# Data source to get the keys for the AI Foundry account
+# Data source to get the keys for the AI Foundry account (skip when local auth is disabled)
 data "azapi_resource_action" "ai_foundry_account_keys" {
+  count                  = var.disable_local_auth ? 0 : 1
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
   resource_id           = azapi_resource.ai_foundry_account.id
   action                = "listKeys"
   response_export_values = ["*"]
 }
 
-# Output the primary access key of the Cognitive Services account
+# Output the primary access key of the Cognitive Services account (null when local auth is disabled)
 output "ai_foundry_account_key" {
-  value = data.azapi_resource_action.ai_foundry_account_keys.output.key1
-  description = "Primary access key of the AI Foundry account"
+  value = var.disable_local_auth ? null : data.azapi_resource_action.ai_foundry_account_keys[0].output.key1
+  description = "Primary access key of the AI Foundry account (null when local auth is disabled)"
   sensitive = true
 }
 
