@@ -126,7 +126,13 @@ Adjust the structure based on the content type:
 - Create the file at the specified path with the generated scaffold content
 - If the path includes new folders, create them first
 
-### 6. Update Parent Folder Index
+### 6. Generate the TOC
+- Create a Markdown table of contents with:
+   - Links to each document in the folder using relative paths
+   - Brief description if available from the file's first paragraph
+   - Alphabetical or logical ordering
+
+### 7. Update Parent Folder Index
 
 - Identify the parent folder's index `.md` file (e.g., `03-Workloads.md` for `03-Workloads/`)
 - If the index has a Table of Contents table, add a new row:
@@ -136,12 +142,12 @@ Adjust the structure based on the content type:
 - Maintain alphabetical or logical ordering consistent with existing entries
 - If no TOC table exists, create one following the standard format
 
-### 7. Update .order File (if exists)
+### 8. Update .order File (if exists)
 
 - Check if the parent folder has a `.order` file
 - If so, add the new page name (without `.md`) to maintain ADO Wiki ordering
 
-### 8. Check for Other TOC References
+### 9. Check for Other TOC References
 
 - Search for other files that might reference the parent folder's contents
 - If found, report them so the user can decide whether to update those references

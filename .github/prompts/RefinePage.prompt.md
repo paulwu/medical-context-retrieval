@@ -1,7 +1,7 @@
 ---
 agent: agent
 model: Claude Opus 4.5 (copilot)
-description: 'Refine a wiki page for spelling, grammar, fluency, link validity, and technical accuracy'
+description: 'Refine a wiki page for spelling, grammar, fluency, link validity, technical accuracy, and table of contents'
 ---
 <!--
 HOW TO USE:
@@ -71,6 +71,26 @@ Execute the following checks in order. Apply fixes directly to the file.
 - Ensure architectural guidance aligns with current Microsoft best practices
 - Flag any claims that cannot be verified with a `<!-- VERIFY: description -->` comment
 
+### 6. Table of Contents
+
+If the page lacks a table of contents, generate one:
+
+- **Check for existing TOC**: Skip if the page already contains a "Table of Contents", "Contents", or "In this article" section
+- **Generate TOC** after the page title (H1) and introductory paragraph:
+  - Include all H2 and H3 headings as nested list items
+  - Use standard Markdown anchor links: `[Heading Text](#heading-text)`
+  - Convert heading text to lowercase, replace spaces with hyphens, remove special characters
+  - Preserve logical ordering (do not alphabetize—follow document structure)
+- **Format**:
+  ```markdown
+  ## Contents
+
+  - [Section One](#section-one)
+    - [Subsection A](#subsection-a)
+  - [Section Two](#section-two)
+  ```
+- **Skip TOC** for short pages with fewer than 3 H2 headings
+
 ## Output
 
 - Apply all corrections directly to the attached file
@@ -78,5 +98,6 @@ Execute the following checks in order. Apply fixes directly to the file.
   - Number of spelling/grammar fixes
   - Any broken or updated links
   - Any technical accuracy corrections
+  - Whether a TOC was added (or skipped and why)
   - Any items flagged for manual review
-- Do NOT rewrite content beyond what is needed for the five tasks above
+- Do NOT rewrite content beyond what is needed for the six tasks above
