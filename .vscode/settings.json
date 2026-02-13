@@ -22,6 +22,9 @@
         "cache/": true,
         "examples/": true,
         ".venv/": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        "test": true
     }
     // "chat.tools.terminal.autoApprove": {
     //     "terraform": true
