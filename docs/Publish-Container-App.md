@@ -2,6 +2,30 @@
 
 This guide covers the process of deploying the Medical Context Retrieval application to Azure Container Apps after building the container image with `package.sh`. It includes Azure portal configuration steps, managed identity validation, RBAC assignments for AI Foundry, and troubleshooting guidance for common issues.
 
+## Contents
+
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Step 1: Build and Push Container Image](#step-1-build-and-push-container-image)
+  - [Using the package.sh Script](#using-the-packagesh-script)
+  - [Custom Options](#custom-options)
+- [Step 2: Update the Container App](#step-2-update-the-container-app)
+- [Step 3: Configure Environment Variables (Azure Portal)](#step-3-configure-environment-variables-azure-portal)
+  - [Required Environment Variables](#required-environment-variables)
+  - [Using Key Vault Secrets (Recommended)](#using-key-vault-secrets-recommended)
+- [Step 4: Validate Managed Identity](#step-4-validate-managed-identity)
+- [Step 5: Configure RBAC for AI Foundry (Entra ID Access)](#step-5-configure-rbac-for-ai-foundry-entra-id-access)
+  - [Required Role: Cognitive Services User](#required-role-cognitive-services-user)
+  - [Verify Role Assignment](#verify-role-assignment)
+- [Step 6: Update Application for Managed Identity (No API Key)](#step-6-update-application-for-managed-identity-no-api-key)
+- [Troubleshooting](#troubleshooting)
+  - [Using Log Stream](#using-log-stream)
+  - [Common Issues and Solutions](#common-issues-and-solutions)
+- [Validating the Deployment](#validating-the-deployment)
+- [References](#references)
+
+---
+
 ## Overview
 
 The deployment workflow consists of:
