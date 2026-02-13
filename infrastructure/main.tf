@@ -446,7 +446,7 @@ module "container_app_environment" {
         value = "0"
       },
       {
-        name  = "COSMOS_DB_ENDPOINT"
+        name  = "COSMOS_ENDPOINT"
         value = azurerm_cosmosdb_account.main[0].endpoint
       }
     ],
@@ -638,7 +638,7 @@ locals {
   ] : []
   cosmos_db_env_block = local.cosmos_db_secret_available ? [
     {
-      name        = "COSMOS_DB_KEY"
+      name        = "COSMOS_KEY"
       secret_name = "cosmos-db-key"
     }
   ] : []
