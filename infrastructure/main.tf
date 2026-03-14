@@ -1,9 +1,9 @@
 # Medical Context Retrieval Demo Infrastructure
-# This deploys the AI models required by the dmeo
+# This deploys the AI models required by the demo
 
 # Data sources for current client configuration
 data "azurerm_client_config" "current" {}
-data "azuread_client_config" "current" {}
+
 
 # - Log Analytics Workspace --------------------------------------------------------------------------------
 #   In EXP, we have to use an existing LAW in a different subscription. To enable that:
@@ -43,22 +43,6 @@ data "azapi_resource_action" "log_analytics_keys_diff_sub" {
   action      = "sharedKeys"
   method      = "POST"
 }
-
-# ----------------------------------------------------------------------------------------------------------
-# Create new Log Analytics Workspace
-# ----------------------------------------------------------------------------------------------------------
-# resource "azurerm_log_analytics_workspace" "main" {
-#   count               = var.deploy_infrastructure ? 1 : 0
-#   name                = local.log_analytics_name
-#   location            = local.main_location
-#   resource_group_name = azurerm_resource_group..project_main_new[0].name
-#   sku                 = "PerGB2018"
-#   retention_in_days   = 90
-#   tags                = local.common_tags
-
-#   depends_on = [azurerm_resource_group..project_main_new]
-# }
-
 
 # ----------------------------------------------------------------------------------------------------------
 # 1) Resource Group for project - Create new or use existing
@@ -107,70 +91,6 @@ resource "azurerm_application_insights" "main" {
 # ----------------------------------------------------------------------------------------------------------
 # 3) Private Network Module (VNet, Private Endpoints, Private DNS Zones)
 # ----------------------------------------------------------------------------------------------------------
-locals {
-  # Base private endpoints that are only created when private networking is deployed
-  base_private_endpoints = var.deploy_infrastructure && var.deploy_private_network ? merge({
-    storage = {
-      name                           = "pe-${local.storage_account_name}"
-      private_connection_resource_id = azurerm_storage_account.main[0].id
-      subresource_names              = ["blob"]
-      private_dns_zone_name          = "privatelink.blob.core.windows.net"
-    }
-    keyvault = {
-      name                           = "pe-${module.key_vault[0].key_vault_name}"
-      private_connection_resource_id = module.key_vault[0].key_vault_id
-      subresource_names              = ["vault"]
-      private_dns_zone_name          = "privatelink.vaultcore.azure.net"
-    }
-    cosmosdb = {
-      name                           = "pe-${local.cosmos_db_name}"
-      private_connection_resource_id = azurerm_cosmosdb_account.main[0].id
-      subresource_names              = ["sql"]
-      private_dns_zone_name          = "privatelink.documents.azure.com"
-    }
-    # cognitive_services = {
-    #   name                           = "pe-${local.cognitive_services_name}"
-    #   private_connection_resource_id = module.cognitive_services[0].id
-    #   subresource_names              = ["account"]
-    #   private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
-    # }
-    container_registry = {
-      name                           = "pe-${local.container_registry_name}"
-      private_connection_resource_id = azurerm_container_registry.main[0].id
-      subresource_names              = ["registry"]
-      private_dns_zone_name          = "privatelink.azurecr.io"
-    }
-    }, var.deploy_container_app_environment ? {
-    container_app_environment = {
-      name                           = "pe-${local.container_app_environment_name}"
-      private_connection_resource_id = module.container_app_environment[0].container_app_environment_id
-      subresource_names              = ["managedEnvironments"]
-      private_dns_zone_name          = "privatelink.azurecontainerapps.io"
-    }
-  } : {}) : {}
-
-  # Conditional AI Foundry private endpoints - only create when modules exist and private networking is enabled
-  aifoundry_private_endpoints = var.deploy_infrastructure && var.deploy_private_network && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? {
-    aifoundry1 = {
-      name                           = "pe-${local.aifoundry_account1_name}"
-      private_connection_resource_id = module.aifoundry_1[0].ai_foundry_account_id
-      subresource_names              = ["account"]
-      private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
-    }
-    # aifoundry2 = {
-    #   name                           = "pe-<secondary-aifoundry-name>"
-    #   private_connection_resource_id = module.aifoundry_2[0].ai_foundry_account_id
-    #   subresource_names              = ["account"]
-    #   private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
-    # }
-  } : {}
-
-  # Merge all private endpoints - only non-empty when private networking is deployed
-  all_private_endpoints = merge(
-    local.base_private_endpoints,
-    local.aifoundry_private_endpoints
-  )
-}
 
 module "private_network" {
   count  = var.deploy_infrastructure && var.deploy_private_network ? 1 : 0
@@ -205,13 +125,6 @@ module "private_network" {
   private_endpoints = local.all_private_endpoints
 
   tags = local.common_tags
-
-  depends_on = [
-    azurerm_resource_group.project_main_new,
-    azurerm_storage_account.main,
-    azurerm_cosmosdb_account.main,
-    module.key_vault
-  ]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -233,10 +146,6 @@ resource "azurerm_storage_account" "main" {
   identity {
     type = "SystemAssigned"
   }
-  depends_on = [
-    azurerm_resource_group.project_main_new,
-    data.azurerm_resource_group.project_main_existing
-  ]
 }
 # ----------------------------------------------------------------------------------------------------------
 # 5) Container Registry for AI Hub
@@ -255,10 +164,6 @@ resource "azurerm_container_registry" "main" {
   identity {
     type = "SystemAssigned"
   }
-  depends_on = [
-    azurerm_resource_group.project_main_new,
-    data.azurerm_resource_group.project_main_existing
-  ]
 }
 
 
@@ -287,11 +192,6 @@ resource "azurerm_cosmosdb_account" "main" {
     location          = local.resource_group_location
     failover_priority = 0
   }
-
-  depends_on = [
-    azurerm_resource_group.project_main_new,
-    data.azurerm_resource_group.project_main_existing
-  ]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -302,8 +202,6 @@ resource "azurerm_cosmosdb_sql_database" "default" {
   name                = var.cosmos_db_database_id
   resource_group_name = local.resource_group_name
   account_name        = azurerm_cosmosdb_account.main[0].name
-
-  depends_on = [azurerm_cosmosdb_account.main]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -321,8 +219,6 @@ resource "azurerm_cosmosdb_sql_container" "containers" {
   database_name       = each.value.database_name != null ? each.value.database_name : azurerm_cosmosdb_sql_database.default[0].name
   partition_key_paths = [each.value.partition_key]
   throughput          = each.value.throughput
-
-  depends_on = [azurerm_cosmosdb_sql_database.default]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -464,15 +360,6 @@ module "container_app_environment" {
     local.azure_openai_secret_blocks,
     local.cosmos_db_secret_blocks
   ) : []
-
-  depends_on = [
-    azurerm_resource_group.project_main_new,
-    data.azurerm_resource_group.project_main_existing,
-    data.azurerm_log_analytics_workspace.existing_same_sub,
-    data.azurerm_log_analytics_workspace.existing_diff_sub,
-    azurerm_cosmosdb_account.main,
-    azurerm_storage_account.main
-  ]
 }
 
 # RBAC: Grant Container App Environment permissions to the Log Analytics workspace
@@ -501,7 +388,7 @@ module "key_vault" {
   current_user_object_id          = data.azurerm_client_config.current.object_id
   key_vault_sku                   = var.key_vault_sku
   soft_delete_retention_days      = 7
-  purge_protection_enabled        = false # enable in production
+  purge_protection_enabled        = true
   enabled_for_disk_encryption     = true
   enabled_for_template_deployment = true
   enable_rbac_authorization       = true
@@ -567,81 +454,15 @@ resource "azurerm_key_vault_secret" "azure_openai_api_key" {
   name         = "azure-openai-api-key"
   value        = var.use_existing_ai_foundry_project ? local.existing_ai_foundry_account_key : module.aifoundry_1[0].ai_foundry_account_key
   key_vault_id = module.key_vault[0].key_vault_id
-  depends_on   = [module.key_vault]
 }
 
 # Store Cosmos DB key in Key Vault for container app consumption
+# TODO: Migrate to RBAC with managed identity (Cosmos DB Built-in Data Contributor role) to eliminate key-based auth
 resource "azurerm_key_vault_secret" "cosmos_db_key" {
   count        = var.deploy_infrastructure ? 1 : 0
   name         = "cosmos-db-key"
   value        = azurerm_cosmosdb_account.main[0].primary_key
   key_vault_id = module.key_vault[0].key_vault_id
-
-  depends_on = [azurerm_cosmosdb_account.main, module.key_vault]
-}
-
-locals {
-  azure_openai_secret_name = "azure-openai-api-key"
-  existing_ai_foundry_account_endpoint = coalesce(
-    try(data.azapi_resource.existing_ai_foundry_account_default[0].output.properties.endpoint, null),
-    try(data.azapi_resource.existing_ai_foundry_account_subscription[0].output.properties.endpoint, null),
-    null
-  )
-  existing_ai_foundry_account_key = var.existing_ai_foundry_local_auth_disabled ? null : coalesce(
-    try(data.azapi_resource_action.existing_ai_foundry_account_keys_default[0].output.key1, null),
-    try(data.azapi_resource_action.existing_ai_foundry_account_keys_subscription[0].output.key1, null),
-    null
-  )
-  azure_openai_endpoint = coalesce(
-    try(module.aifoundry_1[0].ai_foundry_account_endpoint, null),
-    local.existing_ai_foundry_account_endpoint,
-    ""
-  )
-  azure_openai_secret_blocks_module = length(azurerm_key_vault_secret.azure_openai_api_key) > 0 ? [
-    {
-      name                = local.azure_openai_secret_name
-      key_vault_secret_id = azurerm_key_vault_secret.azure_openai_api_key[0].versionless_id
-      identity            = "System"
-    }
-  ] : []
-  azure_openai_secret_blocks_existing = var.azure_openai_api_key_secret_id != "" ? [
-    {
-      name                = local.azure_openai_secret_name
-      key_vault_secret_id = var.azure_openai_api_key_secret_id
-      identity            = "System"
-    }
-  ] : []
-  azure_openai_secret_blocks_inline = var.azure_openai_api_key != "" ? [
-    {
-      name  = local.azure_openai_secret_name
-      value = var.azure_openai_api_key
-    }
-  ] : []
-  azure_openai_secret_blocks        = length(local.azure_openai_secret_blocks_module) > 0 ? local.azure_openai_secret_blocks_module : length(local.azure_openai_secret_blocks_existing) > 0 ? local.azure_openai_secret_blocks_existing : local.azure_openai_secret_blocks_inline
-  azure_openai_secret_available     = length(local.azure_openai_secret_blocks) > 0
-  container_app_requires_openai_key = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld
-  cosmos_db_secret_available        = length(azurerm_key_vault_secret.cosmos_db_key) > 0
-
-  cosmos_db_secret_blocks = local.cosmos_db_secret_available ? [
-    {
-      name                = "cosmos-db-key"
-      key_vault_secret_id = azurerm_key_vault_secret.cosmos_db_key[0].versionless_id
-      identity            = "System"
-    }
-  ] : []
-
-  azure_openai_env_block = local.azure_openai_secret_available ? [
-    {
-      name        = "AZURE_OPENAI_API_KEY"
-      secret_name = local.azure_openai_secret_name
-    }
-  ] : []
-  cosmos_db_env_block = local.cosmos_db_secret_available ? [
-    {
-      name        = "COSMOS_KEY"
-      secret_name = "cosmos-db-key"
-    }
-  ] : []
 }
 
 check "azure_openai_key_supplied" {
@@ -846,102 +667,4 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
     module.container_app_environment
   ]
 }
-
-# ----------------------------------------------------------------------------------------------------------
-# 12) Cognitive Services (Multi-Service Account)
-# ----------------------------------------------------------------------------------------------------------
-# module "cognitive_services" {
-#   count  = var.deploy_infrastructure ? 1 : 0
-#   source = "../Modules/cognitive_services"
-
-#   cognitive_name                = local.cognitive_services_name
-#   resource_group_name           = azurerm_resource_group..project_main_new[0].name
-#   location                      = local.main_location
-#   sku_name                      = "S0"
-#   public_network_access_enabled = var.deploy_private_network ? false : true
-#   custom_subdomain_name         = local.cognitive_services_subdomain
-
-#   network_acls = var.deploy_private_network ? {
-#     default_action        = "Deny"
-#     ip_rules              = []
-#     virtual_network_rules = []
-#   } : null
-
-#   tags = local.common_tags
-
-#   depends_on = [
-#     azurerm_resource_group..project_main_new
-#   ]
-# }
-
-
-# Azure Front Door Profile
-# resource "azurerm_cdn_frontdoor_profile" "main" {
-#   count               = var.deploy_infrastructure ? 1 : 0
-#   name                = "${local.resource_prefix}-afd"
-#   resource_group_name = azurerm_resource_group..project_main_new[0].name
-#   sku_name            = "Standard_AzureFrontDoor"
-#   tags                = local.common_tags
-# }
-
-# Azure Front Door Endpoint
-# resource "azurerm_cdn_frontdoor_endpoint" "main" {
-#   count                    = var.deploy_infrastructure ? 1 : 0
-#   name                     = "${local.resource_prefix}-afd-endpoint"
-#   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.main[0].id
-#   tags                     = local.common_tags
-# }
-
-# Azure Front Door Origin Group
-# resource "azurerm_cdn_frontdoor_origin_group" "main" {
-#   count                    = var.deploy_infrastructure ? 1 : 0
-#   name                     = "containerapp-origin-group"
-#   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.main[0].id
-
-#   load_balancing {
-#     sample_size                 = 4
-#     successful_samples_required = 3
-#   }
-
-#   health_probe {
-#     path                = "/"
-#     request_type        = "HEAD"
-#     protocol            = "Https"
-#     interval_in_seconds = 100
-#   }
-# }
-
-# Azure Front Door Origin
-# resource "azurerm_cdn_frontdoor_origin" "main" {
-#   count                         = var.deploy_infrastructure ? 1 : 0
-#   name                          = "containerapp-origin"
-#   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.main[0].id
-
-#   enabled                        = true
-#   certificate_name_check_enabled = true
-#   host_name                      = azurerm_container_app.main[0].latest_revision_fqdn
-#   http_port                      = 80
-#   https_port                     = 443
-#   origin_host_header             = azurerm_container_app.main[0].latest_revision_fqdn
-#   priority                       = 1
-#   weight                         = 1000
-# }
-
-# Azure Front Door Route
-# resource "azurerm_cdn_frontdoor_route" "main" {
-#   count                         = var.deploy_infrastructure ? 1 : 0
-#   name                          = "containerapp-route"
-#   cdn_frontdoor_endpoint_id     = azurerm_cdn_frontdoor_endpoint.main[0].id
-#   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.main[0].id
-#   enabled                       = true
-
-#   forwarding_protocol    = "HttpsOnly"
-#   https_redirect_enabled = true
-#   patterns_to_match      = ["/*"]
-#   supported_protocols    = ["Http", "Https"]
-
-#   cdn_frontdoor_origin_ids = [azurerm_cdn_frontdoor_origin.main[0].id]
-#   link_to_default_domain   = true
-# }
-
 

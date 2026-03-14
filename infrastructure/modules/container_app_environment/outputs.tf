@@ -27,7 +27,7 @@ output "container_app_environment_identity_principal_id" {
 }
 
 output "container_app_environment_identity_tenant_id" {
-  description = "Tenant ID of the Container App Environment's managed identity"  
+  description = "Tenant ID of the Container App Environment's managed identity"
   value       = azapi_resource.container_app_environment.identity[0].tenant_id
 }
 

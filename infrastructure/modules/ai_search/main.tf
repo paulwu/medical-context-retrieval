@@ -21,11 +21,6 @@ resource "azurerm_search_service" "main" {
 
   tags = var.tags
 
-  # Lifecycle management
-  lifecycle {
-    prevent_destroy = false
-  }
-
   timeouts {
     create = "30m"
     read   = "5m"

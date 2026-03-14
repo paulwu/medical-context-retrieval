@@ -1,0 +1,21 @@
+# Terraform runtime artifacts (549MB+ provider binaries)
+.terraform/
+
+# State files (sensitive, large)
+*.tfstate
+*.tfstate.*
+tfplan
+
+# Session logs (noisy context)
+copilot-workspace/log/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# Local cache (FAISS indices, embeddings)
+cache/
+
+# Environment files (may contain secrets)
+.env

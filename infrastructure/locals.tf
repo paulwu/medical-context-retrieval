@@ -22,21 +22,21 @@ locals {
 
   # Network configuration
   #hub_vnet_name = "${local.resource_prefix}-hub-vnet"
-  vnet_name     = "${local.resource_prefix}-vnet"
+  vnet_name = "${local.resource_prefix}-vnet"
 
   # Resource group names following CAF naming conventions
-  rg_project_main         = local.resource_prefix
+  rg_project_main = local.resource_prefix
 
   # Resource group references - use existing or new based on variables
   resource_group_name = var.deploy_infrastructure ? (
-    var.use_existing_resource_group ? 
-    data.azurerm_resource_group.project_main_existing[0].name : 
+    var.use_existing_resource_group ?
+    data.azurerm_resource_group.project_main_existing[0].name :
     azurerm_resource_group.project_main_new[0].name
   ) : ""
-  
+
   resource_group_location = var.deploy_infrastructure ? (
-    var.use_existing_resource_group ? 
-    data.azurerm_resource_group.project_main_existing[0].location : 
+    var.use_existing_resource_group ?
+    data.azurerm_resource_group.project_main_existing[0].location :
     azurerm_resource_group.project_main_new[0].location
   ) : ""
 
@@ -47,7 +47,7 @@ locals {
   storage_account_name = lower(replace("${local.resource_prefix}sa", "-", ""))
 
   # Cosmos DB configuration
-  cosmos_db_name          = lower("${local.resource_prefix}-cosmos")
+  cosmos_db_name = lower("${local.resource_prefix}-cosmos")
   #cosmos_db_database_name = "zava-db"
   # cosmos_db_database_id = "sustineo"
   # cosmos_db_container_id     = "VoiceConfiguration"
@@ -65,4 +65,131 @@ locals {
 
   #AI Foundry config
   aifoundry_account1_name = "${local.resource_prefix}-aif1-${var.aif_location1}"
+
+  # Base private endpoints that are only created when private networking is deployed
+  base_private_endpoints = var.deploy_infrastructure && var.deploy_private_network ? merge({
+    storage = {
+      name                           = "pe-${local.storage_account_name}"
+      private_connection_resource_id = azurerm_storage_account.main[0].id
+      subresource_names              = ["blob"]
+      private_dns_zone_name          = "privatelink.blob.core.windows.net"
+    }
+    keyvault = {
+      name                           = "pe-${module.key_vault[0].key_vault_name}"
+      private_connection_resource_id = module.key_vault[0].key_vault_id
+      subresource_names              = ["vault"]
+      private_dns_zone_name          = "privatelink.vaultcore.azure.net"
+    }
+    cosmosdb = {
+      name                           = "pe-${local.cosmos_db_name}"
+      private_connection_resource_id = azurerm_cosmosdb_account.main[0].id
+      subresource_names              = ["sql"]
+      private_dns_zone_name          = "privatelink.documents.azure.com"
+    }
+    # cognitive_services = {
+    #   name                           = "pe-${local.cognitive_services_name}"
+    #   private_connection_resource_id = module.cognitive_services[0].id
+    #   subresource_names              = ["account"]
+    #   private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
+    # }
+    container_registry = {
+      name                           = "pe-${local.container_registry_name}"
+      private_connection_resource_id = azurerm_container_registry.main[0].id
+      subresource_names              = ["registry"]
+      private_dns_zone_name          = "privatelink.azurecr.io"
+    }
+    }, var.deploy_container_app_environment ? {
+    container_app_environment = {
+      name                           = "pe-${local.container_app_environment_name}"
+      private_connection_resource_id = module.container_app_environment[0].container_app_environment_id
+      subresource_names              = ["managedEnvironments"]
+      private_dns_zone_name          = "privatelink.azurecontainerapps.io"
+    }
+  } : {}) : {}
+
+  # Conditional AI Foundry private endpoints - only create when modules exist and private networking is enabled
+  aifoundry_private_endpoints = var.deploy_infrastructure && var.deploy_private_network && var.deploy_ai_foundry_instances && !var.destroy_ai_foundry_instances ? {
+    aifoundry1 = {
+      name                           = "pe-${local.aifoundry_account1_name}"
+      private_connection_resource_id = module.aifoundry_1[0].ai_foundry_account_id
+      subresource_names              = ["account"]
+      private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
+    }
+    # aifoundry2 = {
+    #   name                           = "pe-<secondary-aifoundry-name>"
+    #   private_connection_resource_id = module.aifoundry_2[0].ai_foundry_account_id
+    #   subresource_names              = ["account"]
+    #   private_dns_zone_name          = "privatelink.cognitiveservices.azure.com"
+    # }
+  } : {}
+
+  # Merge all private endpoints - only non-empty when private networking is deployed
+  all_private_endpoints = merge(
+    local.base_private_endpoints,
+    local.aifoundry_private_endpoints
+  )
+
+  # Azure OpenAI and secret configuration
+  azure_openai_secret_name = "azure-openai-api-key"
+  existing_ai_foundry_account_endpoint = coalesce(
+    try(data.azapi_resource.existing_ai_foundry_account_default[0].output.properties.endpoint, null),
+    try(data.azapi_resource.existing_ai_foundry_account_subscription[0].output.properties.endpoint, null),
+    null
+  )
+  existing_ai_foundry_account_key = var.existing_ai_foundry_local_auth_disabled ? null : coalesce(
+    try(data.azapi_resource_action.existing_ai_foundry_account_keys_default[0].output.key1, null),
+    try(data.azapi_resource_action.existing_ai_foundry_account_keys_subscription[0].output.key1, null),
+    null
+  )
+  azure_openai_endpoint = coalesce(
+    try(module.aifoundry_1[0].ai_foundry_account_endpoint, null),
+    local.existing_ai_foundry_account_endpoint,
+    ""
+  )
+  azure_openai_secret_blocks_module = length(azurerm_key_vault_secret.azure_openai_api_key) > 0 ? [
+    {
+      name                = local.azure_openai_secret_name
+      key_vault_secret_id = azurerm_key_vault_secret.azure_openai_api_key[0].versionless_id
+      identity            = "System"
+    }
+  ] : []
+  azure_openai_secret_blocks_existing = var.azure_openai_api_key_secret_id != "" ? [
+    {
+      name                = local.azure_openai_secret_name
+      key_vault_secret_id = var.azure_openai_api_key_secret_id
+      identity            = "System"
+    }
+  ] : []
+  azure_openai_secret_blocks_inline = var.azure_openai_api_key != "" ? [
+    {
+      name  = local.azure_openai_secret_name
+      value = var.azure_openai_api_key
+    }
+  ] : []
+  azure_openai_secret_blocks        = length(local.azure_openai_secret_blocks_module) > 0 ? local.azure_openai_secret_blocks_module : length(local.azure_openai_secret_blocks_existing) > 0 ? local.azure_openai_secret_blocks_existing : local.azure_openai_secret_blocks_inline
+  azure_openai_secret_available     = length(local.azure_openai_secret_blocks) > 0
+  container_app_requires_openai_key = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld
+  cosmos_db_secret_available        = length(azurerm_key_vault_secret.cosmos_db_key) > 0
+
+  cosmos_db_secret_blocks = local.cosmos_db_secret_available ? [
+    {
+      name                = "cosmos-db-key"
+      key_vault_secret_id = azurerm_key_vault_secret.cosmos_db_key[0].versionless_id
+      identity            = "System"
+    }
+  ] : []
+
+  azure_openai_env_block = local.azure_openai_secret_available ? [
+    {
+      name        = "AZURE_OPENAI_API_KEY"
+      secret_name = local.azure_openai_secret_name
+    }
+  ] : []
+  # TODO: Migrate to RBAC with managed identity (Cosmos DB Built-in Data Contributor role) to eliminate key-based auth
+  cosmos_db_env_block = local.cosmos_db_secret_available ? [
+    {
+      name        = "COSMOS_KEY"
+      secret_name = "cosmos-db-key"
+    }
+  ] : []
 }

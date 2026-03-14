@@ -2,7 +2,6 @@
 variable "apim_name" {
   description = "Name of the API Management instance"
   type        = string
-  default     = "zavaqa-apim0812"
 }
 
 variable "location" {
@@ -31,13 +30,17 @@ variable "capacity" {
 variable "admin_email" {
   description = "Administrator email address"
   type        = string
-  default     = "Paul.wu@microsoft.com"
 }
 
 variable "organization_name" {
   description = "Organization name"
   type        = string
-  default     = "Zava"
+}
+
+variable "tags" {
+  description = "Tags to apply to the API Management instance"
+  type        = map(string)
+  default     = {}
 }
 
 variable "virtual_network_type" {

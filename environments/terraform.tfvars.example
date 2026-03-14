@@ -1,0 +1,98 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# terraform.tfvars.example — Example variable values for Medical Context Retrieval
+# ═══════════════════════════════════════════════════════════════════════════
+# Copy this file to environments/dev.tfvars (or similar) and fill in values.
+# Usage: terraform plan -var-file=environments/dev.tfvars
+# Or use tf.sh wrapper: bash infrastructure/scripts/tf.sh plan
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── Core Configuration ───────────────────────────────────────────────────
+
+subscription_id     = "00000000-0000-0000-0000-000000000000"  # Your Azure subscription ID
+environment         = "dev"                                     # dev | qa | prod | jp | demo
+organization_prefix = "myorg"                                   # 2-9 alphanumeric chars
+location            = "West US 3"
+
+additional_tags = {
+  CostCenter = "Engineering"
+  Team       = "MedicalRAG"
+}
+
+# ── Resource Group ───────────────────────────────────────────────────────
+
+use_existing_resource_group  = false
+existing_resource_group_name = ""  # Only needed if use_existing_resource_group = true
+
+# ── Deployment Switches ──────────────────────────────────────────────────
+
+deploy_infrastructure           = true
+deploy_private_network          = true   # VNet + private endpoints (adds ~$7/endpoint/mo)
+deploy_ai_foundry_instances     = true   # Create AI Foundry account + project
+deploy_ai_model_deployments     = true   # Deploy GPT-4o and embedding models
+deploy_container_app_environment = true
+deploy_container_app_helloworld = true   # Demo container app
+deploy_ai_search                = true   # Azure AI Search (vector index)
+deploy_azure_frontdoor          = false  # Front Door CDN (adds ~$35-330/mo)
+destroy_ai_foundry_instances    = false  # Set true ONLY to remove AI Foundry
+
+# ── AI Foundry ───────────────────────────────────────────────────────────
+
+aif_location1 = "West US 3"
+
+use_existing_ai_foundry_project          = false
+existing_ai_foundry_id                   = ""
+existing_ai_foundry_subscription_id      = ""
+existing_ai_foundry_local_auth_disabled  = false
+
+# azure_openai_api_key            = ""  # Optional: set in .env or Key Vault instead
+# azure_openai_api_key_secret_id  = ""  # Optional: existing Key Vault secret reference
+
+# ── Container App ────────────────────────────────────────────────────────
+
+container_app_image        = "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+container_app_cpu          = 0.25       # 0.25 | 0.5 | 0.75 | 1.0 | 1.25 | 1.5 | 1.75 | 2.0
+container_app_memory       = "0.5Gi"    # 0.5Gi | 1Gi | 1.5Gi | 2Gi | 2.5Gi | 3Gi | 3.5Gi | 4Gi
+container_app_min_replicas = 1
+container_app_max_replicas = 10
+container_app_target_port  = 80
+
+# ── Container Registry ──────────────────────────────────────────────────
+
+container_registry_sku           = "Basic"   # Basic ($5/mo) | Standard ($20/mo) | Premium ($50/mo)
+container_registry_admin_enabled = false
+
+# ── Cosmos DB ────────────────────────────────────────────────────────────
+
+cosmos_db_consistency_level = "Session"
+cosmos_db_database_id       = "sustineo"
+cosmos_db_containers = [
+  {
+    name          = "VoiceConfiguration"
+    partition_key = "/id"
+    throughput    = 400
+  },
+  {
+    name          = "DesignConfigurations"
+    partition_key = "/id"
+    throughput    = 400
+  }
+]
+
+# ── Key Vault ────────────────────────────────────────────────────────────
+
+key_vault_sku                       = "standard"  # standard | premium
+key_vault_certificate_contact_email = ""
+key_vault_certificate_contact_name  = ""
+key_vault_certificate_contact_phone = ""
+
+# ── Log Analytics ────────────────────────────────────────────────────────
+
+use_existing_log_analytics                 = true
+existing_log_analytics_workspace_name      = ""  # Name of existing LAW
+existing_log_analytics_resource_group_name = ""
+existing_log_analytics_subscription_id     = ""  # Leave empty if same subscription
+
+# ── Storage Account ──────────────────────────────────────────────────────
+
+storage_account_tier             = "Standard"  # Standard | Premium
+storage_account_replication_type = "LRS"       # LRS | GRS | RAGRS | ZRS | GZRS | RAGZRS

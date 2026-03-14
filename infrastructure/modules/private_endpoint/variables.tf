@@ -5,21 +5,21 @@ variable "subnet_id" { type = string }
 variable "private_connection_resource_id" { type = string }
 
 variable "subresource_names" {
-	type    = list(string)
-	default = []
+  type    = list(string)
+  default = []
 }
 
 variable "request_message" {
-	type    = string
-	default = null
+  type    = string
+  default = null
 }
 
 variable "private_dns_zone_ids" {
-	type    = list(string)
-	default = []
+  type    = list(string)
+  default = []
 }
 
 variable "tags" {
-	type    = map(string)
-	default = {}
+  type    = map(string)
+  default = {}
 }

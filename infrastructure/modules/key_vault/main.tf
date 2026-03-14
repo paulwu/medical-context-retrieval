@@ -15,13 +15,12 @@ resource "azurerm_key_vault" "main" {
   public_network_access_enabled   = var.public_network_access_enabled
 
   # Network ACLs to allow access during deployment
+  # NOTE: default_action = "Allow" permits all traffic, making ip_rules redundant.
+  # Change default_action to "Deny" when ip_rules should take effect.
   network_acls {
-    default_action = "Allow"  # Temporarily allow all access during deployment
+    default_action = "Allow"
     bypass         = "AzureServices"
-
-    # Add your current IP if needed
-    # ip_rules = ["YOUR_PUBLIC_IP"]
-    ip_rules = ["68.4.116.145"] # Your current public IP
+    ip_rules       = var.network_acl_ip_rules
   }
 
   timeouts {
@@ -32,30 +31,6 @@ resource "azurerm_key_vault" "main" {
   }
   tags = var.tags
 }
-# Certificate Contacts for the Key Vault - Temporarily disabled during network configuration
-# resource "azurerm_key_vault_certificate_contacts" "main" {
-#   key_vault_id = azurerm_key_vault.main.id
-
-#   contact {
-#     email = var.certificate_contact_email
-#     name  = var.certificate_contact_name != "" ? var.certificate_contact_name : "Key Vault Administrator"
-#     phone = var.certificate_contact_phone != "" ? var.certificate_contact_phone : null
-#   }
-
-#   # Explicit dependencies to ensure RBAC is applied first
-#   depends_on = [
-#     azurerm_key_vault.main,
-#     azurerm_role_assignment.current_user_kv_admin
-#   ]
-#   # Add timeouts to handle propagation delays
-#   timeouts {
-#     create = "10m"
-#     read   = "5m"
-#     update = "10m"
-#     delete = "10m"
-#   }
-# }
-
 # RBAC: Grant current user Key Vault Administrator role
 resource "azurerm_role_assignment" "current_user_kv_admin" {
   count                = var.assign_current_user_admin ? 1 : 0
@@ -64,7 +39,6 @@ resource "azurerm_role_assignment" "current_user_kv_admin" {
   principal_id         = var.current_user_object_id
   principal_type       = "User"
 
-  depends_on = [azurerm_key_vault.main]
 }
 
 # RBAC: Grant OpenAI service Key Vault Secrets User role
@@ -75,7 +49,6 @@ resource "azurerm_role_assignment" "openai_kv_secrets_user" {
   principal_id         = var.openai_identity_principal_id
   principal_type       = "ServicePrincipal"
 
-  depends_on = [azurerm_key_vault.main]
 }
 
 # RBAC: Grant OpenAI service Key Vault Crypto User role
@@ -86,5 +59,4 @@ resource "azurerm_role_assignment" "openai_kv_crypto_user" {
   principal_id         = var.openai_identity_principal_id
   principal_type       = "ServicePrincipal"
 
-  depends_on = [azurerm_key_vault.main]
 }

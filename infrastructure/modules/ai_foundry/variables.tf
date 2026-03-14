@@ -54,12 +54,12 @@ variable "disable_local_auth" {
 }
 
 variable "tags" {
-  description = "Tags to apply to the Key Vault"
+  description = "Tags to apply to the AI Foundry resources"
   type        = map(string)
   default     = {}
 }
 variable "assign_current_user_admin" {
-  description = "Whether to assign current user as Key Vault Administrator"
+  description = "Whether to assign current user as AI Foundry Administrator"
   type        = bool
   default     = true
 }
@@ -69,22 +69,3 @@ variable "current_user_object_id" {
   type        = string
 }
 
-# variable "resource_group_id" {}
-# variable "cognitive_kind" {
-#   default = "OpenAI"
-# }
-# variable "cognitive_sku" {
-#   default = "S0"
-# }
-
-# variable "cognitive_private_endpoint_name" {}
-# variable "virtual_network_name" {}
-# variable "virtual_network_resource_group_name" {}
-# variable "private_endpoints_subnet_name" {}
-# variable "private_dns_zone_resource_group_name" {}
-# variable "private_dns_zone_name" {
-#   default = "privatelink.openai.azure.com"
-# }
-# variable "tags" {
-#   default = {}
-# }

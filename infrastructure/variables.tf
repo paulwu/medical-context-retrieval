@@ -1,6 +1,11 @@
 # ---------------------------------------------------------------------------------------------------
 # Core Configuration Variables
 # ---------------------------------------------------------------------------------------------------
+variable "subscription_id" {
+  description = "The Azure subscription ID where resources will be deployed"
+  type        = string
+}
+
 variable "environment" {
   description = "The environment name (e.g., dev, qa, prod, jp)"
   type        = string
@@ -235,7 +240,7 @@ variable "container_registry_sku" {
 variable "container_registry_admin_enabled" {
   description = "Whether admin user is enabled for Container Registry"
   type        = bool
-  default     = true
+  default     = false
 }
 
 # ---------------------------------------------------------------------------------------------------

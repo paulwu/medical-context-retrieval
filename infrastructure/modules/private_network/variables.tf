@@ -24,8 +24,8 @@ variable "vnet_address_space" {
 variable "subnets" {
   description = "Map of subnets to create"
   type = map(object({
-    name             = string
-    address_prefixes = list(string)
+    name              = string
+    address_prefixes  = list(string)
     service_endpoints = optional(list(string), [])
     delegation = optional(object({
       name = string
@@ -41,8 +41,8 @@ variable "subnets" {
       address_prefixes = ["10.240.0.0/23"]
     }
     private_endpoints = {
-      name             = "snet-private-endpoints"
-      address_prefixes = ["10.240.2.0/24"]
+      name              = "snet-private-endpoints"
+      address_prefixes  = ["10.240.2.0/24"]
       service_endpoints = ["Microsoft.Storage", "Microsoft.KeyVault", "Microsoft.CognitiveServices"]
     }
   }
@@ -65,8 +65,3 @@ variable "tags" {
   default     = {}
 }
 
-variable "depends_on_resources" {
-  description = "List of resources this module depends on"
-  type        = list(any)
-  default     = []
-}

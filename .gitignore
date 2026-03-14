@@ -246,6 +246,7 @@ figures/
 *.tfstate
 *.tfstate.*
 *.tfvars
+!*.tfvars.example
 *.tfvars.json
 tfplan
 .terraform/
@@ -255,3 +256,6 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Environment selector state
+.current-env

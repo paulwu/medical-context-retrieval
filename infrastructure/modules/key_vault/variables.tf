@@ -102,6 +102,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "network_acl_ip_rules" {
+  description = "List of IP addresses or CIDR blocks to allow through the Key Vault network ACLs"
+  type        = list(string)
+  default     = []
+}
+
 variable "public_network_access_enabled" {
   description = "Whether public network access is enabled for the Key Vault"
   type        = bool

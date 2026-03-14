@@ -65,7 +65,7 @@ resource "azurerm_cdn_frontdoor_route" "app" {
   cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.app.id]
   supported_protocols           = ["Http", "Https"]
   patterns_to_match             = ["/*"]
-  forwarding_protocol           = "MatchRequest"  #HttpsOnly
+  forwarding_protocol           = "MatchRequest" #HttpsOnly
   https_redirect_enabled        = true
   link_to_default_domain        = true
   enabled                       = true

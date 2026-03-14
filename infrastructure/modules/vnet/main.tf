@@ -23,7 +23,7 @@ resource "azurerm_subnet" "this" {
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = each.value.address_prefixes
   service_endpoints    = try(each.value.service_endpoints, null)
-  
+
   # Add subnet delegation support
   dynamic "delegation" {
     for_each = each.value.delegation != null ? [each.value.delegation] : []
@@ -35,7 +35,6 @@ resource "azurerm_subnet" "this" {
       }
     }
   }
-  
-  depends_on = [azurerm_virtual_network.this]
+
 }
 

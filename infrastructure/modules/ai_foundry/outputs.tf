@@ -2,33 +2,33 @@
 data "azapi_resource_action" "ai_foundry_account_keys" {
   count                  = var.disable_local_auth ? 0 : 1
   type                   = "Microsoft.CognitiveServices/accounts@2025-06-01"
-  resource_id           = azapi_resource.ai_foundry_account.id
-  action                = "listKeys"
+  resource_id            = azapi_resource.ai_foundry_account.id
+  action                 = "listKeys"
   response_export_values = ["*"]
 }
 
 # Output the primary access key of the Cognitive Services account (null when local auth is disabled)
 output "ai_foundry_account_key" {
-  value = var.disable_local_auth ? null : data.azapi_resource_action.ai_foundry_account_keys[0].output.key1
+  value       = var.disable_local_auth ? null : data.azapi_resource_action.ai_foundry_account_keys[0].output.key1
   description = "Primary access key of the AI Foundry account (null when local auth is disabled)"
-  sensitive = true
+  sensitive   = true
 }
 
 # Output the name of the Cognitive Services account
 output "ai_foundry_account_name" {
-  value = azapi_resource.ai_foundry_account.name
+  value       = azapi_resource.ai_foundry_account.name
   description = "Name of the AI Foundry account"
 }
 
 # Output the ID of the Cognitive Services account
 output "ai_foundry_account_id" {
-  value = azapi_resource.ai_foundry_account.id
+  value       = azapi_resource.ai_foundry_account.id
   description = "ID of the AI Foundry account"
 }
 
 # Output the endpoint of the Cognitive Services account
 output "ai_foundry_account_endpoint" {
-  value = azapi_resource.ai_foundry_account.output.properties.endpoint
+  value       = azapi_resource.ai_foundry_account.output.properties.endpoint
   description = "Endpoint URL of the AI Foundry account"
 }
 

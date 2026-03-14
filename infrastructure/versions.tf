@@ -17,7 +17,7 @@ provider "azurerm" {
   features {}
   resource_provider_registrations = "core"
   storage_use_azuread             = true
-  subscription_id                 = "ac844b56-6818-4eb6-9ae7-2454ceb83c47"
+  subscription_id                 = var.subscription_id
 }
 
 provider "azapi" {

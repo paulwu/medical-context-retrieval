@@ -1,0 +1,11 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# backend.tfvars.example — Backend configuration for Terraform state
+# ═══════════════════════════════════════════════════════════════════════════
+# Copy to environments/dev.backend.tfvars and fill in values.
+# Usage: terraform init -backend-config=environments/dev.backend.tfvars
+# ═══════════════════════════════════════════════════════════════════════════
+
+resource_group_name  = "EXP-HLS-MedicalContext-RG"   # RG containing the state storage account
+storage_account_name = "medctxtfstate"                 # Storage account for TF state (immutable)
+container_name       = "tfstate"
+key                  = "state"

@@ -1,0 +1,16 @@
+{
+  "environments": {
+    "medical-ctx-dev": {
+      "alias": "dev",
+      "description": "Development environment — Azure remote state",
+      "tfvars": "environments/dev.tfvars",
+      "backend": "environments/dev.backend.tfvars"
+    },
+    "medical-ctx-local": {
+      "alias": "local",
+      "description": "Local development — no remote state (offline/validation only)",
+      "tfvars": "environments/local.tfvars",
+      "backend": ""
+    }
+  }
+}

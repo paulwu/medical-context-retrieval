@@ -7,15 +7,13 @@ resource "azurerm_api_management" "apim" {
   resource_group_name = var.resource_group_name
   publisher_name      = var.organization_name
   publisher_email     = var.admin_email
-  sku_name           = "${var.tier}_${var.capacity}"
+  sku_name            = "${var.tier}_${var.capacity}"
 
   identity {
     type = "SystemAssigned"
   }
 
-  tags = {
-    "Created by" = "paulwu@onemtc.net"
-  }
+  tags = var.tags
 }
 
 # Application Insights Logger
@@ -37,37 +35,37 @@ resource "azurerm_api_management_diagnostic" "app_insights_diagnostic" {
   api_management_logger_id = azurerm_api_management_logger.app_insights_logger.id
 
   sampling_percentage       = 100.0
-  always_log_errors        = true
-  log_client_ip            = true
-  verbosity                = "information"
+  always_log_errors         = true
+  log_client_ip             = true
+  verbosity                 = "information"
   http_correlation_protocol = "Legacy"
 
   frontend_request {
-    body_bytes = 0
+    body_bytes     = 0
     headers_to_log = []
   }
 
   frontend_response {
-    body_bytes = 0
+    body_bytes     = 0
     headers_to_log = []
   }
 
   backend_request {
-    body_bytes = 0
+    body_bytes     = 0
     headers_to_log = []
   }
 
   backend_response {
-    body_bytes = 0
+    body_bytes     = 0
     headers_to_log = []
   }
 }
 
 # Monitor Diagnostic Setting for APIM
 resource "azurerm_monitor_diagnostic_setting" "apim_diagnostics" {
-  name               = "default"
-  target_resource_id = azurerm_api_management.apim.id
-  log_analytics_workspace_id = var.log_analytics_workspace_id
+  name                           = "default"
+  target_resource_id             = azurerm_api_management.apim.id
+  log_analytics_workspace_id     = var.log_analytics_workspace_id
   log_analytics_destination_type = "Dedicated"
 
   enabled_log {

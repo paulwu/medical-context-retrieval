@@ -17,7 +17,7 @@ output "search_service_url" {
 
 output "search_service_endpoint" {
   description = "Endpoint of the AI Search service"
-  value       = azurerm_search_service.main.name
+  value       = "https://${azurerm_search_service.main.name}.search.windows.net"
 }
 
 output "search_service_primary_key" {

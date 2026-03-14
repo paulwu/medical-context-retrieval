@@ -39,7 +39,7 @@ resource "azapi_resource" "container_app_environment" {
       # VNet configuration for private networking
       vnetConfiguration = var.infrastructure_subnet_id != null ? {
         infrastructureSubnetId = var.infrastructure_subnet_id
-        internal              = var.internal_load_balancer_enabled
+        internal               = var.internal_load_balancer_enabled
       } : null
 
       # App logs configuration - supports cross-subscription Log Analytics  
@@ -58,8 +58,8 @@ resource "azapi_resource" "container_app_environment" {
         var.enable_dedicated_workload_profiles ? [{
           name                = var.dedicated_workload_profile_name
           workloadProfileType = var.dedicated_workload_profile_type
-          minimumCount       = var.dedicated_workload_profile_min_count
-          maximumCount       = var.dedicated_workload_profile_max_count
+          minimumCount        = var.dedicated_workload_profile_min_count
+          maximumCount        = var.dedicated_workload_profile_max_count
         }] : []
       )
 
@@ -138,7 +138,6 @@ resource "azurerm_container_app" "helloworld" {
     }
   }
 
-  depends_on = [azapi_resource.container_app_environment]
 }
 
 # ----------------------------------------------------------------------------------------------------------
@@ -186,6 +185,6 @@ resource "azurerm_role_assignment" "container_env_log_analytics" {
   role_definition_name = "Log Analytics Contributor"
   principal_id         = azapi_resource.container_app_environment.identity[0].principal_id
   principal_type       = "ServicePrincipal"
-  
+
   depends_on = [azapi_resource.container_app_environment]
 }

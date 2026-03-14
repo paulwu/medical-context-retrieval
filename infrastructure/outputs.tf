@@ -9,9 +9,9 @@ output "medical_ctx_rag_resource_group_name" {
 
 output "medical_ctx_rag_resource_group_id" {
   description = "ID of the medical_ctx_rag resource group"
-  value       = var.deploy_infrastructure ? (
-    var.use_existing_resource_group ? 
-    data.azurerm_resource_group.project_main_existing[0].id : 
+  value = var.deploy_infrastructure ? (
+    var.use_existing_resource_group ?
+    data.azurerm_resource_group.project_main_existing[0].id :
     azurerm_resource_group.project_main_new[0].id
   ) : null
 }
@@ -153,7 +153,6 @@ output "key_vault_id" {
 output "key_vault_uri" {
   description = "URI of the Key Vault"
   value       = var.deploy_infrastructure ? module.key_vault[0].key_vault_uri : null
-  sensitive   = true
 }
 
 output "container_registry_id" {
@@ -176,7 +175,6 @@ output "deployment_summary" {
     resource_group_deployed = var.deploy_infrastructure
     ai_services_deployed    = var.deploy_infrastructure
     ai_foundry_deployed     = var.deploy_infrastructure && var.deploy_ai_foundry_instances
-    deployment_timestamp    = timestamp()
   }
 }
 
@@ -186,8 +184,8 @@ output "ai_models_summary" {
   value = {
     ai_model_deployments_enabled = var.deploy_infrastructure && var.deploy_ai_model_deployments
     ai_foundry_endpoint          = var.deploy_infrastructure && var.deploy_ai_foundry_instances ? module.aifoundry_1[0].ai_foundry_account_endpoint : null
-    ai_foundry_project_name      = "aifoundry-project-dev"
-    ai_foundry_hub_name          = "aifoundry-hub-dev"
+    ai_foundry_project_name      = var.deploy_infrastructure && var.deploy_ai_foundry_instances ? try(module.aifoundry_1[0].ai_foundry_project.name, null) : null
+    ai_foundry_hub_name          = var.deploy_infrastructure && var.deploy_ai_foundry_instances ? module.aifoundry_1[0].ai_foundry_account_name : null
   }
 }
 

@@ -17,7 +17,7 @@ Review and create Terraform configurations that prioritize state safety, securit
 Before making infrastructure changes:
 
 ### State Management
-- Backend type (S3, Azure Storage, GCS, Terraform Cloud)
+- Backend type (Azure Storage recommended for this project)
 - State locking enabled and accessible
 - Backup and recovery procedures
 - Workspace strategy
@@ -62,7 +62,7 @@ Every change must include:
 
 **Secrets Management**:
 - Never hardcode credentials
-- Use secrets managers (AWS Secrets Manager, Azure Key Vault)
+- Use Azure Key Vault for secrets management
 - Generate and store securely (random_password resource)
 
 **IAM Least Privilege**:
@@ -78,8 +78,8 @@ Every change must include:
 ## State Management
 
 **Backend Configuration**:
-- Use remote backends with encryption
-- Enable state locking (DynamoDB for S3, built-in for cloud providers)
+- Use remote backends with encryption (Azure Storage for this project)
+- Enable state locking (built-in with Azure Storage blob leases)
 - Workspace or separate state files per environment
 
 **Drift Detection**:
