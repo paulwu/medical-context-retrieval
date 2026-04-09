@@ -78,13 +78,13 @@ The development-to-deployment workflow:
    | Variable | Required For | Example |
    |----------|-------------|---------|
    | `AZURE_OPENAI_ENDPOINT` | Both modes | `https://your-endpoint.openai.azure.com` |
-   | `AZURE_OPENAI_API_KEY` | Both modes (unless using managed identity) | `(your key)` |
+   | `AZURE_OPENAI_API_KEY` | Local mode only (optional in Azure — uses managed identity) | `(your key)` |
    | `AOAI_EMBED_MODEL` | Both modes | `text-embedding-3-large` |
    | `AOAI_CHAT_MODEL` | Both modes | `gpt-5-mini` |
    | `STORAGE_MODE` | Mode selection | `local` or `azure` |
 
-   For **local mode** (`STORAGE_MODE=local`), only Azure OpenAI credentials are needed.
-   For **azure mode**, you also need `AZURE_SEARCH_*` and `COSMOS_*` variables.
+   For **local mode** (`STORAGE_MODE=local`), Azure OpenAI endpoint + API key are needed.
+   For **azure mode**, set `AZURE_SEARCH_*` and `COSMOS_*` variables. The `AZURE_OPENAI_API_KEY` is **not needed** when the Container App uses managed identity.
 
 3. **Install Python dependencies:**
 
@@ -285,25 +285,25 @@ The application requires several environment variables to connect to Azure AI Fo
 
 ### Required Environment Variables
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `AZURE_OPENAI_ENDPOINT` | AI Foundry/OpenAI endpoint URL | `https://sharedaifoundry.openai.azure.com` |
-| `AZURE_OPENAI_API_KEY` | API key (if key auth enabled) | `(Secret reference or value)` |
-| `AOAI_EMBED_MODEL` | Embedding model deployment name | `text-embedding-3-large` |
-| `AOAI_CHAT_MODEL` | Chat completion model deployment name | `gpt-5-mini` |
+| Variable | Description | Required? |
+|----------|-------------|-----------|
+| `AZURE_OPENAI_ENDPOINT` | AI Foundry/OpenAI endpoint URL | ✅ Yes |
+| `AOAI_EMBED_MODEL` | Embedding model deployment name | ✅ Yes |
+| `AOAI_CHAT_MODEL` | Chat completion model deployment name | ✅ Yes |
+| `AZURE_OPENAI_API_KEY` | API key for OpenAI | ❌ Not needed — uses managed identity |
+| `COSMOS_KEY` | Cosmos DB primary key | ⚠️ Still used (migration to RBAC pending) |
+| `AZURE_SEARCH_KEY` | Azure AI Search admin key | ⚠️ Still used (migration to RBAC pending) |
 
-### Using Key Vault Secrets (Recommended)
+### Authentication Model
 
-Instead of storing API keys directly, reference Key Vault secrets:
+The Container App uses **system-assigned managed identity** for Azure OpenAI. The app code (`rag/embeddings.py`, `rag/headers.py`) automatically detects:
+- If `AZURE_OPENAI_API_KEY` is set → uses API key auth
+- If not set → uses `ManagedIdentityCredential` with token provider
 
-1. In the **Secrets** section of Container App settings, add a new secret:
-   - **Name:** `azure-openai-api-key`
-   - **Type:** Key Vault reference
-   - **Key Vault secret URI:** `https://<keyvault-name>.vault.azure.net/secrets/azure-openai-api-key`
-2. In environment variables, reference the secret:
-   - **Name:** `AZURE_OPENAI_API_KEY`
-   - **Source:** Secret reference
-   - **Value:** `azure-openai-api-key`
+**RBAC required on the AI Foundry account:**
+- `Cognitive Services User` — assigned to the Container App's managed identity principal
+
+> **Note:** Cosmos DB and Azure AI Search still use key-based auth via `COSMOS_KEY` and `AZURE_SEARCH_KEY` environment variables. RBAC role assignments have been added in Terraform, but the application code has not yet been migrated.
 
 ---
 
@@ -584,6 +584,22 @@ Access denied due to missing or invalid credentials
 ---
 
 ## Validating the Deployment
+
+### Check the Version Watermark
+
+The demo UI displays a version string below the title (e.g., `v20260409-105020-b795a6b`). This is the **image tag + git hash**, set at build time by `package.sh`.
+
+| Version displayed | Meaning |
+|---|---|
+| `v20260409-105020-b795a6b` | Timestamp `YYYYMMDD-HHMMSS` + git short hash |
+| `vdev` | Running locally or from an image built without `package.sh` |
+| No version shown | Running an image built before the watermark was added |
+
+The version is baked into the Docker image via `APP_VERSION` build arg. To override manually:
+```bash
+az containerapp update --name medctx-demo-ca --resource-group EXP-HLS-MedicalContext-RG \
+  --set-env-vars APP_VERSION=my-custom-version
+```
 
 ### Quick Validation Steps
 

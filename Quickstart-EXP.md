@@ -95,7 +95,7 @@ Update complete.
 The Container App instance require a few more steps for the application to work.
 1. Navigate to the Container App instance (medctx-demo-ca) in the Azure Portal
 2. Navigate to Application > Containers > Properties. Verify the container "demo-app" is pointed to Azure Container Registry `medctxdemoacr.azurecr.io` with the image `medical-context-rag`
-3. Under the `Environment variables` tab, confirm "AZURE_OPENAI_ENDPOINT" points to the correct endpoint and that "AZURE_OPENAI_API_KEY" is sourced from the Key Vault secret `azure-openai-api-key`. Terraform populates these values automatically—only adjust if you intentionally need a different endpoint.
+3. Under the `Environment variables` tab, confirm "AZURE_OPENAI_ENDPOINT" points to the correct endpoint. The `AZURE_OPENAI_API_KEY` is **no longer required** — the Container App uses managed identity (`ManagedIdentityCredential`) to authenticate with AI Foundry. Ensure the Container App's system-assigned identity has the `Cognitive Services User` role on the AI Foundry account.
 4. Navigate to Networking > Ingress blade. Make sure the 'Ingress' box is checked and change the Target port to `8866` (default to port 80).
 5. Navigate to the 'Overview' blade of the container app. Restart the container app by clicking [Stop] to stop the Container App and then [Start] to initiate the application again.
 6. While you are in the 'Overview' blade, capture the Application url for later use.
