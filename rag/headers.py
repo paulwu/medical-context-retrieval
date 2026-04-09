@@ -371,7 +371,24 @@ async def generate_headers(
 async def azure_chat_completion(messages: List[Dict], model: str | None = None):  # placeholder; real impl in separate llm module later
     from openai import AsyncAzureOpenAI  # type: ignore
     from .config import AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, AOAI_CHAT_MODEL
-    client = AsyncAzureOpenAI(api_key=AZURE_OPENAI_API_KEY, azure_endpoint=AZURE_OPENAI_ENDPOINT, api_version="2024-08-01-preview")
+    import os
+
+    az_key = AZURE_OPENAI_API_KEY or os.getenv("AZURE_OPENAI_API_KEY")
+    api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-08-01-preview")
+
+    if az_key:
+        client = AsyncAzureOpenAI(api_key=az_key, azure_endpoint=AZURE_OPENAI_ENDPOINT, api_version=api_version)
+    else:
+        from azure.identity.aio import DefaultAzureCredential, get_bearer_token_provider
+        credential = DefaultAzureCredential()
+        token_provider = get_bearer_token_provider(
+            credential, "https://cognitiveservices.azure.com/.default"
+        )
+        client = AsyncAzureOpenAI(
+            azure_ad_token_provider=token_provider,
+            azure_endpoint=AZURE_OPENAI_ENDPOINT,
+            api_version=api_version,
+        )
     # Use higher token limit for reasoning models like gpt-5-mini that use tokens for internal reasoning
     # Increased from 500 to 800 to handle longer contextual headers
     resp = await client.chat.completions.create(
