@@ -153,6 +153,7 @@ output "key_vault_id" {
 output "key_vault_uri" {
   description = "URI of the Key Vault"
   value       = var.deploy_infrastructure ? module.key_vault[0].key_vault_uri : null
+  sensitive   = true
 }
 
 output "container_registry_id" {
