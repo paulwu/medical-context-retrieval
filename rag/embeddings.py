@@ -25,9 +25,10 @@ def get_client():
 
     Resolution order:
     1. If standard OPENAI_API_KEY set -> use public OpenAI endpoint.
-    2. Else if AZURE_OPENAI_API_KEY + AZURE_OPENAI_ENDPOINT -> use AzureOpenAI.
-    3. Else if EMBED_ZERO_ON_MISSING=1 -> return a dummy sentinel to trigger zero-vector fallback.
-    4. Else raise a clear credential error.
+    2. Else if AZURE_OPENAI_API_KEY + AZURE_OPENAI_ENDPOINT -> use AzureOpenAI with key.
+    3. Else if AZURE_OPENAI_ENDPOINT set (no key) -> use AzureOpenAI with managed identity.
+    4. Else if EMBED_ZERO_ON_MISSING=1 -> return a dummy sentinel to trigger zero-vector fallback.
+    5. Else raise a clear credential error.
     """
     global _client
     if _client is not None:
@@ -44,6 +45,25 @@ def get_client():
     if az_key and az_ep and AzureOpenAI:
         _client = AzureOpenAI(api_key=az_key, azure_endpoint=az_ep, api_version=api_version)
         return _client
+    if az_ep and AzureOpenAI:
+        # Managed identity / DefaultAzureCredential (no API key required)
+        try:
+            from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+            credential = DefaultAzureCredential()
+            token_provider = get_bearer_token_provider(
+                credential, "https://cognitiveservices.azure.com/.default"
+            )
+            _client = AzureOpenAI(
+                azure_ad_token_provider=token_provider,
+                azure_endpoint=az_ep,
+                api_version=api_version,
+            )
+            return _client
+        except ImportError:
+            raise RuntimeError(
+                "azure-identity package required for managed identity auth. "
+                "Install with: pip install azure-identity"
+            )
 
     if os.getenv("EMBED_ZERO_ON_MISSING", "0") == "1":
         class _Dummy:
@@ -53,7 +73,8 @@ def get_client():
         return _client
 
     raise RuntimeError(
-        "No embedding credentials found. Set OPENAI_API_KEY or AZURE_OPENAI_API_KEY + AZURE_OPENAI_ENDPOINT. "
+        "No embedding credentials found. Set OPENAI_API_KEY, or AZURE_OPENAI_API_KEY + AZURE_OPENAI_ENDPOINT, "
+        "or just AZURE_OPENAI_ENDPOINT for managed identity auth. "
         "Optionally set EMBED_ZERO_ON_MISSING=1 to return zero vectors instead of failing."
     )
 

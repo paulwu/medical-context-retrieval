@@ -51,7 +51,7 @@ def _get(name: str, required: bool = False, default: Optional[str] = None) -> Op
 
 # Azure / OpenAI
 AZURE_OPENAI_ENDPOINT = _normalize_endpoint(_get("AZURE_OPENAI_ENDPOINT", required=True))  # e.g. https://xxx.openai.azure.com
-AZURE_OPENAI_API_KEY = _get("AZURE_OPENAI_API_KEY", required=True)
+AZURE_OPENAI_API_KEY = _get("AZURE_OPENAI_API_KEY")  # Optional when using managed identity
 AOAI_EMBED_MODEL = _get("AOAI_EMBED_MODEL", required=True)
 AOAI_CHAT_MODEL = _get("AOAI_CHAT_MODEL", required=True)
 
