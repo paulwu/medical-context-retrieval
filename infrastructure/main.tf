@@ -718,7 +718,7 @@ resource "azurerm_role_assignment" "container_app_env_kv_secrets_user" {
 }
 
 resource "azurerm_role_assignment" "container_app_kv_secrets_user" {
-  count                = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld ? 1 : 0
+  count                = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
   scope                = module.key_vault[0].key_vault_id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = module.container_app_environment[0].container_app_identity_principal_id
@@ -751,7 +751,7 @@ resource "azurerm_role_assignment" "container_app_env_acr_pull" {
 # AcrPull Role Assignment for Container App (app identity)
 # ----------------------------------------------------------------------------------------------------------
 resource "azurerm_role_assignment" "container_app_acr_pull" {
-  count                = var.deploy_infrastructure && var.deploy_container_app_environment && var.deploy_container_app_helloworld ? 1 : 0
+  count                = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
   scope                = azurerm_container_registry.main[0].id
   role_definition_name = "AcrPull"
   principal_id         = module.container_app_environment[0].container_app_identity_principal_id
