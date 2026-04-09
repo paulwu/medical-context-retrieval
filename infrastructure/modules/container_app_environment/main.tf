@@ -138,10 +138,11 @@ resource "azurerm_container_app" "helloworld" {
     }
   }
 
-  # Ignore template changes so that out-of-band deploys (e.g. update.sh)
-  # are not reverted by subsequent terraform apply runs.
+  # Ignore changes to attributes that are modified by out-of-band deploys
+  # (e.g. update.sh, Azure Portal). This prevents terraform apply from
+  # reverting the production container image, secrets, ingress, and registry.
   lifecycle {
-    ignore_changes = [template]
+    ignore_changes = [template, ingress, secret, registry]
   }
 }
 
