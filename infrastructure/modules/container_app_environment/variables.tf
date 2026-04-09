@@ -86,7 +86,7 @@ variable "dedicated_workload_profile_max_count" {
 
 # Container App Configuration
 variable "deploy_helloworld_app" {
-  description = "Deploy the Hello World demo container app"
+  description = "Legacy flag — the container app is always created when this module is called. This variable is retained for backward compatibility with the root module but no longer controls the app lifecycle. The template is managed via lifecycle ignore_changes so out-of-band image deploys (update.sh) are preserved."
   type        = bool
   default     = false
 }

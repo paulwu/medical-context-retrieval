@@ -78,7 +78,7 @@ resource "azapi_resource" "container_app_environment" {
 # Demo Container App (Hello World)
 # ----------------------------------------------------------------------------------------------------------
 resource "azurerm_container_app" "helloworld" {
-  count                        = var.deploy_helloworld_app ? 1 : 0
+  count                        = 1
   name                         = var.container_app_name
   container_app_environment_id = azapi_resource.container_app_environment.id
   resource_group_name          = var.resource_group_name
@@ -138,6 +138,11 @@ resource "azurerm_container_app" "helloworld" {
     }
   }
 
+  # Ignore template changes so that out-of-band deploys (e.g. update.sh)
+  # are not reverted by subsequent terraform apply runs.
+  lifecycle {
+    ignore_changes = [template]
+  }
 }
 
 # ----------------------------------------------------------------------------------------------------------
