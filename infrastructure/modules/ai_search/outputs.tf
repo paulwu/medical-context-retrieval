@@ -62,3 +62,8 @@ output "search_service_partition_count" {
   description = "Number of partitions for the AI Search service"
   value       = azurerm_search_service.main.partition_count
 }
+
+output "search_service_principal_id" {
+  description = "Principal ID of the AI Search service managed identity"
+  value       = azurerm_search_service.main.identity[0].principal_id
+}

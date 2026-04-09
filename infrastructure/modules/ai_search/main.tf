@@ -19,6 +19,10 @@ resource "azurerm_search_service" "main" {
   # Network rule set for IP restrictions
   allowed_ips = var.ip_rules
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   tags = var.tags
 
   timeouts {
