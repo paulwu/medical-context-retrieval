@@ -303,12 +303,13 @@ resource "azurerm_cosmosdb_sql_container" "app_containers" {
     container.name => container
   } : {}
 
-  name                = each.value.name
-  resource_group_name = local.resource_group_name
-  account_name        = azurerm_cosmosdb_account.main[0].name
-  database_name       = each.value.database_name != null ? each.value.database_name : local.cosmos_db_app_active_database_name
-  partition_key_paths = [each.value.partition_key]
-  throughput          = each.value.throughput
+  name                  = each.value.name
+  resource_group_name   = local.resource_group_name
+  account_name          = azurerm_cosmosdb_account.main[0].name
+  database_name         = each.value.database_name != null ? each.value.database_name : local.cosmos_db_app_active_database_name
+  partition_key_paths   = [each.value.partition_key]
+  partition_key_version = 2
+  throughput            = each.value.throughput
 
   lifecycle {
     prevent_destroy = true
@@ -324,12 +325,13 @@ resource "azurerm_cosmosdb_sql_container" "app_containers_recreatable" {
     container.name => container
   } : {}
 
-  name                = each.value.name
-  resource_group_name = local.resource_group_name
-  account_name        = azurerm_cosmosdb_account.main[0].name
-  database_name       = each.value.database_name != null ? each.value.database_name : local.cosmos_db_app_active_database_name
-  partition_key_paths = [each.value.partition_key]
-  throughput          = each.value.throughput
+  name                  = each.value.name
+  resource_group_name   = local.resource_group_name
+  account_name          = azurerm_cosmosdb_account.main[0].name
+  database_name         = each.value.database_name != null ? each.value.database_name : local.cosmos_db_app_active_database_name
+  partition_key_paths   = [each.value.partition_key]
+  partition_key_version = 2
+  throughput            = each.value.throughput
 }
 
 # ----------------------------------------------------------------------------------------------------------
