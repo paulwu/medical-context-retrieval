@@ -60,6 +60,13 @@ locals {
     : try(azurerm_cosmosdb_sql_database.default[0].name, "")
   ) : ""
 
+  # Active application database name — resolves based on cosmos_db_app_force_recreate
+  cosmos_db_app_active_database_name = var.deploy_infrastructure ? (
+    var.cosmos_db_app_force_recreate
+    ? try(azurerm_cosmosdb_sql_database.app_recreatable[0].name, var.cosmos_db_app_database_id)
+    : try(azurerm_cosmosdb_sql_database.app_default[0].name, var.cosmos_db_app_database_id)
+  ) : var.cosmos_db_app_database_id
+
   # Container App configuration
   container_app_environment_name = lower("${local.resource_prefix}-cae")
   container_app_name             = lower("${local.resource_prefix}-ca")

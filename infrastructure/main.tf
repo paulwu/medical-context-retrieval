@@ -269,6 +269,70 @@ resource "azurerm_cosmosdb_sql_container" "containers_recreatable" {
 }
 
 # ----------------------------------------------------------------------------------------------------------
+#    Cosmos DB Application Database — safe mode (default)
+#    Stores documents and chunks for the RAG pipeline.
+#    lifecycle { prevent_destroy } guards against accidental data loss.
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_database" "app_default" {
+  count               = var.deploy_infrastructure && !var.cosmos_db_app_force_recreate ? 1 : 0
+  name                = var.cosmos_db_app_database_id
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+# ----------------------------------------------------------------------------------------------------------
+#    Cosmos DB Application Database — recreatable mode (force_recreate = true)
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_database" "app_recreatable" {
+  count               = var.deploy_infrastructure && var.cosmos_db_app_force_recreate ? 1 : 0
+  name                = var.cosmos_db_app_database_id
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+}
+
+# ----------------------------------------------------------------------------------------------------------
+#    Cosmos DB Application Containers — safe mode (default)
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_container" "app_containers" {
+  for_each = var.deploy_infrastructure && !var.cosmos_db_app_force_recreate ? {
+    for container in var.cosmos_db_app_containers :
+    container.name => container
+  } : {}
+
+  name                = each.value.name
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+  database_name       = each.value.database_name != null ? each.value.database_name : local.cosmos_db_app_active_database_name
+  partition_key_paths = [each.value.partition_key]
+  throughput          = each.value.throughput
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+# ----------------------------------------------------------------------------------------------------------
+#    Cosmos DB Application Containers — recreatable mode
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_container" "app_containers_recreatable" {
+  for_each = var.deploy_infrastructure && var.cosmos_db_app_force_recreate ? {
+    for container in var.cosmos_db_app_containers :
+    container.name => container
+  } : {}
+
+  name                = each.value.name
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+  database_name       = each.value.database_name != null ? each.value.database_name : local.cosmos_db_app_active_database_name
+  partition_key_paths = [each.value.partition_key]
+  throughput          = each.value.throughput
+}
+
+# ----------------------------------------------------------------------------------------------------------
 # 7) Container App Environment Module
 # ----------------------------------------------------------------------------------------------------------
 module "container_app_environment" {

@@ -296,6 +296,32 @@ variable "cosmos_db_force_recreate" {
   default     = false
 }
 
+variable "cosmos_db_app_database_id" {
+  description = "Name of the application Cosmos DB SQL database (for documents and chunks)"
+  type        = string
+  default     = "medical-context-db"
+}
+
+variable "cosmos_db_app_containers" {
+  description = "List of containers for the application database"
+  type = list(object({
+    name          = string
+    partition_key = string
+    throughput    = optional(number, 400)
+    database_name = optional(string, null)
+  }))
+  default = [
+    { name = "documents", partition_key = "/id", throughput = 400, database_name = null },
+    { name = "chunks", partition_key = "/id", throughput = 400, database_name = null }
+  ]
+}
+
+variable "cosmos_db_app_force_recreate" {
+  description = "When false (default), the application Cosmos DB database (medical-context-db) uses lifecycle { prevent_destroy }. When true, allows destroy and recreate (DATA LOSS)."
+  type        = bool
+  default     = false
+}
+
 # ---------------------------------------------------------------------------------------------------
 # Key Vault
 # ---------------------------------------------------------------------------------------------------
