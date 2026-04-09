@@ -80,11 +80,16 @@ if ! az account show >/dev/null 2>&1; then
   exit 1
 fi
 
+GIT_HASH="$(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+APP_VERSION="${IMAGE_TAG}-${GIT_HASH}"
+
 echo "Building container image with Azure Container Registry Tasks..."
+echo "  APP_VERSION: $APP_VERSION"
 az acr build \
   --registry "$REGISTRY_NAME" \
   --image "$IMAGE_NAME:$IMAGE_TAG" \
   --image "$IMAGE_NAME:latest" \
+  --build-arg "APP_VERSION=$APP_VERSION" \
   "$BUILD_CONTEXT"
 
 FULL_IMAGE="$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG"

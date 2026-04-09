@@ -31,6 +31,8 @@ RUN mkdir -p data_pilot/pdfs artifacts \
 EXPOSE 8866
 
 # Set environment variables
+ARG APP_VERSION=dev
+ENV APP_VERSION=${APP_VERSION}
 ENV VOILA_PORT=8866
 ENV VOILA_IP=0.0.0.0
 ENV VOILA_CONFIG_PATH=/app/voila_config
