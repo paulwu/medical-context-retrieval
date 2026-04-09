@@ -379,8 +379,8 @@ async def azure_chat_completion(messages: List[Dict], model: str | None = None):
     if az_key:
         client = AsyncAzureOpenAI(api_key=az_key, azure_endpoint=AZURE_OPENAI_ENDPOINT, api_version=api_version)
     else:
-        from azure.identity.aio import DefaultAzureCredential, get_bearer_token_provider
-        credential = DefaultAzureCredential()
+        from azure.identity.aio import ManagedIdentityCredential, get_bearer_token_provider
+        credential = ManagedIdentityCredential()
         token_provider = get_bearer_token_provider(
             credential, "https://cognitiveservices.azure.com/.default"
         )

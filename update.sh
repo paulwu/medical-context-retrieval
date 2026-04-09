@@ -109,4 +109,20 @@ az containerapp update \
   --resource-group "$RESOURCE_GROUP" \
   --image "$FULL_IMAGE"
 
+echo "Restarting active revision to ensure the new image is picked up..."
+ACTIVE_REVISION=$(az containerapp revision list \
+  --name "$CONTAINER_APP_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --query "[?properties.active && properties.trafficWeight > \`0\`].name | [0]" -o tsv)
+
+if [[ -n "$ACTIVE_REVISION" ]]; then
+  az containerapp revision restart \
+    --name "$CONTAINER_APP_NAME" \
+    --resource-group "$RESOURCE_GROUP" \
+    --revision "$ACTIVE_REVISION"
+  echo "Revision '$ACTIVE_REVISION' restarted."
+else
+  echo "WARNING: Could not determine active revision to restart."
+fi
+
 echo "Update complete."

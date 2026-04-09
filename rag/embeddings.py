@@ -46,10 +46,12 @@ def get_client():
         _client = AzureOpenAI(api_key=az_key, azure_endpoint=az_ep, api_version=api_version)
         return _client
     if az_ep and AzureOpenAI:
-        # Managed identity / DefaultAzureCredential (no API key required)
+        # Managed identity auth (no API key required).
+        # Use ManagedIdentityCredential explicitly to avoid DefaultAzureCredential
+        # picking up AZURE_CLIENT_ID/SECRET env vars for a different service principal.
         try:
-            from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-            credential = DefaultAzureCredential()
+            from azure.identity import ManagedIdentityCredential, get_bearer_token_provider
+            credential = ManagedIdentityCredential()
             token_provider = get_bearer_token_provider(
                 credential, "https://cognitiveservices.azure.com/.default"
             )
