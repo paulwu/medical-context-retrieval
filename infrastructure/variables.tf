@@ -290,6 +290,12 @@ variable "cosmos_db_containers" {
   ]
 }
 
+variable "cosmos_db_force_recreate" {
+  description = "When false (default), Cosmos DB database and containers use lifecycle { prevent_destroy } to prevent data loss. When true, allows Terraform to destroy and recreate. Switching from false to true requires a manual state migration — see break-glass procedure in main.tf."
+  type        = bool
+  default     = false
+}
+
 # ---------------------------------------------------------------------------------------------------
 # Key Vault
 # ---------------------------------------------------------------------------------------------------

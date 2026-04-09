@@ -53,6 +53,13 @@ locals {
   # cosmos_db_container_id     = "VoiceConfiguration"
   # cosmos_db_container_partition_key = "/id"
 
+  # Active database name — resolves to whichever resource is active based on cosmos_db_force_recreate
+  cosmos_db_active_database_name = var.deploy_infrastructure ? (
+    var.cosmos_db_force_recreate
+    ? try(azurerm_cosmosdb_sql_database.recreatable[0].name, "")
+    : try(azurerm_cosmosdb_sql_database.default[0].name, "")
+  ) : ""
+
   # Container App configuration
   container_app_environment_name = lower("${local.resource_prefix}-cae")
   container_app_name             = lower("${local.resource_prefix}-ca")

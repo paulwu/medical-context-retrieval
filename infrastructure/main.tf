@@ -195,20 +195,45 @@ resource "azurerm_cosmosdb_account" "main" {
 }
 
 # ----------------------------------------------------------------------------------------------------------
-#    Cosmos DB SQL Database - medical-ctx-rag
+#    Cosmos DB SQL Database — safe mode (default)
+#    lifecycle { prevent_destroy } guards against accidental data loss.
+# ----------------------------------------------------------------------------------------------------------
+# BREAK-GLASS PROCEDURE — to switch from safe → force-recreate:
+#   1. terraform state rm 'azurerm_cosmosdb_sql_database.default[0]'
+#   2. For each container: terraform state rm 'azurerm_cosmosdb_sql_container.containers["<name>"]'
+#   3. Set cosmos_db_force_recreate = true in tfvars
+#   4. terraform plan   (should show only creates for .recreatable resources)
+#   5. terraform apply
+# To switch back, reverse: state rm the .recreatable resources, set flag to false, re-import.
 # ----------------------------------------------------------------------------------------------------------
 resource "azurerm_cosmosdb_sql_database" "default" {
-  count               = var.deploy_infrastructure ? 1 : 0
+  count               = var.deploy_infrastructure && !var.cosmos_db_force_recreate ? 1 : 0
+  name                = var.cosmos_db_database_id
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+# ----------------------------------------------------------------------------------------------------------
+#    Cosmos DB SQL Database — recreatable mode (force_recreate = true)
+#    No lifecycle protection — Terraform may destroy and recreate freely.
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_database" "recreatable" {
+  count               = var.deploy_infrastructure && var.cosmos_db_force_recreate ? 1 : 0
   name                = var.cosmos_db_database_id
   resource_group_name = local.resource_group_name
   account_name        = azurerm_cosmosdb_account.main[0].name
 }
 
 # ----------------------------------------------------------------------------------------------------------
-#    Cosmos DB SQL Containers - Dynamic creation from array
+#    Cosmos DB SQL Containers — safe mode (default)
+#    lifecycle { prevent_destroy } guards against accidental data loss.
 # ----------------------------------------------------------------------------------------------------------
 resource "azurerm_cosmosdb_sql_container" "containers" {
-  for_each = var.deploy_infrastructure ? {
+  for_each = var.deploy_infrastructure && !var.cosmos_db_force_recreate ? {
     for container in var.cosmos_db_containers :
     container.name => container
   } : {}
@@ -216,7 +241,29 @@ resource "azurerm_cosmosdb_sql_container" "containers" {
   name                = each.value.name
   resource_group_name = local.resource_group_name
   account_name        = azurerm_cosmosdb_account.main[0].name
-  database_name       = each.value.database_name != null ? each.value.database_name : azurerm_cosmosdb_sql_database.default[0].name
+  database_name       = each.value.database_name != null ? each.value.database_name : local.cosmos_db_active_database_name
+  partition_key_paths = [each.value.partition_key]
+  throughput          = each.value.throughput
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+# ----------------------------------------------------------------------------------------------------------
+#    Cosmos DB SQL Containers — recreatable mode (force_recreate = true)
+#    No lifecycle protection — Terraform may destroy and recreate freely.
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_container" "containers_recreatable" {
+  for_each = var.deploy_infrastructure && var.cosmos_db_force_recreate ? {
+    for container in var.cosmos_db_containers :
+    container.name => container
+  } : {}
+
+  name                = each.value.name
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+  database_name       = each.value.database_name != null ? each.value.database_name : local.cosmos_db_active_database_name
   partition_key_paths = [each.value.partition_key]
   throughput          = each.value.throughput
 }
@@ -661,6 +708,37 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
   role_definition_name = "Cosmos DB Account Reader Role"
   principal_id         = module.container_app_environment[0].container_app_environment_identity_principal_id
   principal_type       = "ServicePrincipal"
+
+  depends_on = [
+    azurerm_cosmosdb_account.main,
+    module.container_app_environment
+  ]
+}
+
+# ----------------------------------------------------------------------------------------------------------
+# Cosmos DB Built-in Data Contributor Role Assignment for Container App
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_cosmosdb_sql_role_assignment" "container_app_cosmos_data_contributor" {
+  count               = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+  role_definition_id  = "${azurerm_cosmosdb_account.main[0].id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002"
+  principal_id        = module.container_app_environment[0].container_app_identity_principal_id
+  scope               = azurerm_cosmosdb_account.main[0].id
+
+  depends_on = [
+    azurerm_cosmosdb_account.main,
+    module.container_app_environment
+  ]
+}
+
+resource "azurerm_cosmosdb_sql_role_assignment" "container_app_env_cosmos_data_contributor" {
+  count               = var.deploy_infrastructure && var.deploy_container_app_environment ? 1 : 0
+  resource_group_name = local.resource_group_name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+  role_definition_id  = "${azurerm_cosmosdb_account.main[0].id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002"
+  principal_id        = module.container_app_environment[0].container_app_environment_identity_principal_id
+  scope               = azurerm_cosmosdb_account.main[0].id
 
   depends_on = [
     azurerm_cosmosdb_account.main,
