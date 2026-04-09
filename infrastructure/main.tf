@@ -668,3 +668,19 @@ resource "azurerm_role_assignment" "container_app_env_cosmos_reader" {
   ]
 }
 
+# ----------------------------------------------------------------------------------------------------------
+# Search Index Data Contributor Role Assignment for Container App
+# ----------------------------------------------------------------------------------------------------------
+resource "azurerm_role_assignment" "container_app_search_index_contributor" {
+  count                = var.deploy_infrastructure && var.deploy_ai_search && var.deploy_container_app_environment ? 1 : 0
+  scope                = module.ai_search[0].search_service_id
+  role_definition_name = "Search Index Data Contributor"
+  principal_id         = module.container_app_environment[0].container_app_identity_principal_id
+  principal_type       = "ServicePrincipal"
+
+  depends_on = [
+    module.ai_search,
+    module.container_app_environment
+  ]
+}
+
