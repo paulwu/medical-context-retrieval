@@ -65,5 +65,5 @@ output "search_service_partition_count" {
 
 output "search_service_principal_id" {
   description = "Principal ID of the AI Search service managed identity"
-  value       = azurerm_search_service.main.identity[0].principal_id
+  value       = length(azurerm_search_service.main.identity) > 0 ? azurerm_search_service.main.identity[0].principal_id : null
 }
