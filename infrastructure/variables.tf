@@ -6,6 +6,12 @@ variable "subscription_id" {
   type        = string
 }
 
+variable "tenant_id" {
+  description = "The Azure AD tenant ID (used for provider context; not consumed directly by resources)"
+  type        = string
+  default     = ""
+}
+
 variable "environment" {
   description = "The environment name (e.g., dev, qa, prod, jp)"
   type        = string

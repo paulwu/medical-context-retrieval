@@ -45,7 +45,10 @@ resource "azapi_resource" "container_app_environment" {
       # App logs configuration - supports cross-subscription Log Analytics  
       # Disabled due to API validation issues with cross-subscription setup. 
       # Manually enable in Azure portal and remove ContainerAppConsoleLogs, AppEnvSpringAppConsoleLogs, and AppEnvSessionConsoleLogs in Azure Monitor Diagnostics Settings for CAE
-      appLogsConfiguration = null
+      appLogsConfiguration = {
+        destination               = null
+        logAnalyticsConfiguration = null
+      }
 
       # Workload profiles configuration
       workloadProfiles = concat(
@@ -177,6 +180,13 @@ resource "azurerm_monitor_diagnostic_setting" "container_app_environment" {
 
   enabled_log {
     category = "AppEnvSessionLifeCycleLogs"
+  }
+
+  # Explicitly disabled — Azure API always returns this block; declaring it
+  # prevents perpetual drift between code and deployed state.
+  metric {
+    category = "AllMetrics"
+    enabled  = false
   }
 
   depends_on = [azapi_resource.container_app_environment]
