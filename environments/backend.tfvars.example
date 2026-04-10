@@ -5,6 +5,7 @@
 # Usage: terraform init -backend-config=environments/dev.backend.tfvars
 # ═══════════════════════════════════════════════════════════════════════════
 
+subscription_id      = "00000000-0000-0000-0000-000000000000"  # Subscription containing the state storage account
 resource_group_name  = "EXP-HLS-MedicalContext-RG"   # RG containing the state storage account
 storage_account_name = "medctxtfstate"                 # Storage account for TF state (immutable)
 container_name       = "tfstate"

@@ -1,8 +1,6 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = "EXP-HLS-MedicalContext-RG"
-    storage_account_name = "medctxtfstate"
-    container_name       = "tfstate"
-    key                  = "state"
+    # Configured via -backend-config=environments/<env>.backend.tfvars
+    # Usage: terraform init -backend-config=environments/exp.backend.tfvars
   }
 }
